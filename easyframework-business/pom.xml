@@ -18,6 +18,10 @@
     </properties>
 
     <dependencies>
-
+        <dependency>
+            <groupId>com.neusoft.easyframework</groupId>
+            <artifactId>easyframework-core</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 </project>

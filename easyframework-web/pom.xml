@@ -11,6 +11,32 @@
     <name>easyframework-web Maven Webapp</name>
     <url>http://maven.apache.org</url>
     <dependencies>
+        <dependency>
+            <groupId>com.neusoft.easyframework</groupId>
+            <artifactId>easyframework-business</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <!-- Spring begin -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <!-- Spring end -->
+
+        <!-- Spring aop begin -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <!-- Spring aop end -->
 
     </dependencies>
     <build>
