@@ -23,4 +23,22 @@
 
        <mvc:view-controller path="/" view-name="redirect:/index" />
 
+       <!-- Spring MVC Json 配置 -->
+       <bean id="stringHttpMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter" />
+       <bean id="jsonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+              <property name="supportedMediaTypes">
+                     <list>
+                            <value>text/html;charset=UTF-8</value>
+                     </list>
+              </property>
+       </bean>
+       <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+              <property name="messageConverters">
+                      <list>
+                             <ref bean="stringHttpMessageConverter" />
+                             <ref bean="jsonHttpMessageConverter" />
+                      </list>
+              </property>
+       </bean>
+
 </beans>
