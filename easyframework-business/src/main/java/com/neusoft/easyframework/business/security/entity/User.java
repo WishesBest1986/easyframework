@@ -3,6 +3,7 @@ package com.neusoft.easyframework.business.security.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * Created by neusoft on 15-5-6.
@@ -12,6 +13,19 @@ import javax.persistence.Table;
 public class User extends SecurityEntity {
     private String username;
 
+    private String password;
+
+    private String plainPassword;
+
+    private String salt;
+
+    private String fullname;
+
+    private int type;
+
+    private String enabled;
+
+
     @Column(name = "username", unique = true, nullable = false, length = 50)
     public String getUsername() {
         return username;
@@ -19,5 +33,59 @@ public class User extends SecurityEntity {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    @Column(name = "password", length = 50)
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Column(name = "enabled")
+    public String getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(String enabled) {
+        this.enabled = enabled;
+    }
+
+    @Transient
+    public String getPlainPassword() {
+        return plainPassword;
+    }
+
+    public void setPlainPassword(String plainPassword) {
+        this.plainPassword = plainPassword;
+    }
+
+    @Column(name = "salt")
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
+
+    @Column(name = "fullname", length = 100)
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
+
+    @Column(name = "type")
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }
