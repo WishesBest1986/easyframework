@@ -1,6 +1,8 @@
 package com.neusoft.easyframework.business.security.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by neusoft on 15-5-7.
@@ -8,6 +10,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "sec_org")
 public class Org extends SecurityEntity {
+    public static final Long ROOT_ORG_ID = 0L;
+
     private String name;
 
     private String active;
@@ -19,6 +23,8 @@ public class Org extends SecurityEntity {
     private String type;
 
     private Org parentOrg;
+
+    private List<Org> orgs = new ArrayList<Org>();
 
     @Column(name = "name", nullable = false, length = 200)
     public String getName() {
@@ -73,5 +79,22 @@ public class Org extends SecurityEntity {
 
     public void setParentOrg(Org parentOrg) {
         this.parentOrg = parentOrg;
+    }
+
+    @OneToMany(mappedBy = "parentOrg", cascade = CascadeType.ALL)
+    public List<Org> getOrgs() {
+        return orgs;
+    }
+
+    public void setOrgs(List<Org> orgs) {
+        this.orgs = orgs;
+    }
+
+    public Org() {
+
+    }
+
+    public Org(Long id) {
+        this.id = id;
     }
 }
