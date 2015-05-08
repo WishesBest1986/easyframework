@@ -21,6 +21,10 @@ public class UserService {
         userDao.save(user);
     }
 
+    public void delete(Long id) {
+        userDao.delete(id);
+    }
+
     public User get(Long id) {
         return userDao.get(id);
     }
@@ -29,7 +33,11 @@ public class UserService {
         return userDao.findUniqueBy("username", username);
     }
 
-    public Page<User> findPage(final Page<User> page, final List<PropertyFilter> filters) {
+    public List<User> getAll() {
+        return userDao.getAll();
+    }
+
+    public Page<User> findPage(Page<User> page, List<PropertyFilter> filters) {
         return userDao.findPage(page, filters);
     }
 }

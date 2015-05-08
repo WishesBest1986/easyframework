@@ -26,6 +26,16 @@ public class Org extends SecurityEntity {
 
     private List<Org> orgs = new ArrayList<Org>();
 
+    private List<User> users = new ArrayList<User>();
+
+    public Org() {
+
+    }
+
+    public Org(Long id) {
+        this.id = id;
+    }
+
     @Column(name = "name", nullable = false, length = 200)
     public String getName() {
         return name;
@@ -90,11 +100,12 @@ public class Org extends SecurityEntity {
         this.orgs = orgs;
     }
 
-    public Org() {
-
+    @OneToMany(mappedBy = "org", cascade = CascadeType.ALL)
+    public List<User> getUsers() {
+        return users;
     }
 
-    public Org(Long id) {
-        this.id = id;
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 }

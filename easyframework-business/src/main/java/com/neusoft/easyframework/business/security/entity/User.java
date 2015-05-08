@@ -1,9 +1,8 @@
 package com.neusoft.easyframework.business.security.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by neusoft on 15-5-6.
@@ -25,6 +24,9 @@ public class User extends SecurityEntity {
 
     private String enabled;
 
+    private Org org;
+
+    private List<Role> roles = new ArrayList<Role>();
 
     @Column(name = "username", unique = true, nullable = false, length = 50)
     public String getUsername() {
@@ -87,5 +89,25 @@ public class User extends SecurityEntity {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "org", nullable = true)
+    public Org getOrg() {
+        return org;
+    }
+
+    public void setOrg(Org org) {
+        this.org = org;
+    }
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "sec_role_user", joinColumns = {@JoinColumn(name = "user_id")}, inverseJoinColumns = {@JoinColumn(name = "role_id")})
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 }
