@@ -55,10 +55,21 @@ public class ResourceService {
     }
 
     /**
-     * 根据用户ID查询该用户具有权限访问的资源与不需要授权的资源
+     * 根据用户ID查询该用户具有权限访问的资源与不需要授权的菜单资源
      */
-    public List<Resource> getAuthorizedResource(Long userId) {
-        String sql = "";
+    public List<Resource> getAuthorizedMenuResource(Long userId) {
+        String sql = "SELECT re.id, re.name, re.source, re.menu FROM sec_user u " +
+                "LEFT OUTER JOIN sec_role_user ru ON u.id = ru.user_id " +
+                "LEFT OUTER JOIN sec_role r ON ru.role_id = r.id " +
+                "LEFT OUTER JOIN sec_role_authority ra ON r.id = ra.role_id " +
+                "LEFT OUTER JOIN sec_authority a ON ra.authority_id = a.id " +
+                "LEFT OUTER JOIN sec_authority_resource ar ON a.id = ar.authority_id " +
+                "LEFT OUTER JOIN sec_resource re ON ar.resource_id = re.id " +
+                "WHERE u.id = ? AND re.menu IS NOT NULL" +
+                "UNION ALL " +
+                "(SELECT re.id, re.name, re.source, re.menu FROM sec_resource re " +
+                "WHERE re.menu IS NOT NULL AND NOT EXISTS( " +
+                "SELECT ar.authority_id FROM sec_authority_resource ar WHERE ar.resource_id = re.id))";
         SQLQuery query = resourceDao.createSQLQuery(sql, userId);
         query.addEntity(Resource.class);
         return query.list();
