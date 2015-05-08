@@ -28,6 +28,12 @@ public class User extends SecurityEntity {
 
     private List<Role> roles = new ArrayList<Role>();
 
+    private List<Authority> authorities = new ArrayList<Authority>();
+
+    public User() {
+
+    }
+
     @Column(name = "username", unique = true, nullable = false, length = 50)
     public String getUsername() {
         return username;
@@ -102,12 +108,22 @@ public class User extends SecurityEntity {
     }
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "sec_role_user", joinColumns = {@JoinColumn(name = "user_id")}, inverseJoinColumns = {@JoinColumn(name = "role_id")})
+    @JoinTable(name = "sec_user_role", joinColumns = {@JoinColumn(name = "user_id")}, inverseJoinColumns = {@JoinColumn(name = "role_id")})
     public List<Role> getRoles() {
         return roles;
     }
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
+    }
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "sec_user_authority", joinColumns = {@JoinColumn(name = "user_id")}, inverseJoinColumns = {@JoinColumn(name = "authority_id")})
+    public List<Authority> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(List<Authority> authorities) {
+        this.authorities = authorities;
     }
 }

@@ -1,9 +1,6 @@
 package com.neusoft.easyframework.business.security.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +15,16 @@ public class Role extends SecurityEntity {
     private String description;
 
     private List<User> users = new ArrayList<User>();
+
+    private List<Authority> authorities = new ArrayList<Authority>();
+
+    public Role() {
+
+    }
+
+    public Role(Long id) {
+        this.id = id;
+    }
 
     @Column(name = "name", unique = true, nullable = false, length = 200)
     public String getName() {
@@ -44,5 +51,15 @@ public class Role extends SecurityEntity {
 
     public void setUsers(List<User> users) {
         this.users = users;
+    }
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "sec_role_authority", joinColumns = {@JoinColumn(name = "role_id")}, inverseJoinColumns = {@JoinColumn(name = "authority_id")})
+    public List<Authority> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(List<Authority> authorities) {
+        this.authorities = authorities;
     }
 }
