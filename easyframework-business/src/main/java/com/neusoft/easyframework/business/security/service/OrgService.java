@@ -2,6 +2,8 @@ package com.neusoft.easyframework.business.security.service;
 
 import com.neusoft.easyframework.business.security.dao.OrgDao;
 import com.neusoft.easyframework.business.security.entity.Org;
+import com.neusoft.easyframework.core.orm.Page;
+import com.neusoft.easyframework.core.orm.PropertyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +31,10 @@ public class OrgService {
 
     public List<Org> getAll() {
         return orgDao.getAll();
+    }
+
+    public Page<Org> findPage(final Page<Org> page, final List<PropertyFilter> filters) {
+        return orgDao.findPage(page, filters);
     }
 
     public List<Org> getByParent(Long parentId) {

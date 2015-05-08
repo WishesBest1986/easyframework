@@ -18,7 +18,6 @@ import java.util.List;
 public class RoleService {
     @Autowired
     private RoleDao roleDao;
-
     @Autowired
     private UserDao userDao;
 
@@ -49,7 +48,7 @@ public class RoleService {
         return roleDao.getAll();
     }
 
-    public Page<Role> findPage(Page<Role> page, final List<PropertyFilter> filters) {
+    public Page<Role> findPage(final Page<Role> page, final List<PropertyFilter> filters) {
         return roleDao.findPage(page, filters);
     }
 }

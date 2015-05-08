@@ -46,7 +46,7 @@ public class MenuService {
         return menuDao.getAll();
     }
 
-    public Page<Menu> findPage(final Page<Menu> page, List<PropertyFilter> filters) {
+    public Page<Menu> findPage(final Page<Menu> page, final List<PropertyFilter> filters) {
         return menuDao.findPage(page, filters);
     }
 
