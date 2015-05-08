@@ -1,5 +1,6 @@
 package com.neusoft.easyframework.business.security.dao;
 
+import com.neusoft.easyframework.business.security.entity.Resource;
 import com.neusoft.easyframework.core.orm.hibernate.HibernateDao;
 import org.springframework.stereotype.Repository;
 
@@ -7,6 +8,6 @@ import org.springframework.stereotype.Repository;
  * Created by neusoft on 15-5-8.
  */
 @Repository
-public class ResourceDao extends HibernateDao<ResourceDao, Long> {
+public class ResourceDao extends HibernateDao<Resource, Long> {
 
 }

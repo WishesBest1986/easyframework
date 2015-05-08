@@ -1,6 +1,8 @@
 package com.neusoft.easyframework.business.security.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by neusoft on 15-5-8.
@@ -13,6 +15,8 @@ public class Resource extends SecurityEntity {
     private String source;
 
     private Menu menu;
+
+    private List<Authority> authorities = new ArrayList<Authority>();
 
     public Resource() {
 
@@ -48,5 +52,14 @@ public class Resource extends SecurityEntity {
 
     public void setMenu(Menu menu) {
         this.menu = menu;
+    }
+
+    @ManyToMany(mappedBy = "resources", fetch = FetchType.EAGER)
+    public List<Authority> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(List<Authority> authorities) {
+        this.authorities = authorities;
     }
 }
