@@ -85,7 +85,7 @@ public class ShiroAuthorizingRealm extends AuthorizingRealm {
 
         if (!user.isEnabled()) {
             logger.warn("用户被禁止使用");
-            throw new UnknownAccountException("用户被禁止使用");
+            throw new DisabledAccountException("用户被禁止使用");
         }
 
         logger.info("用户【" + username + "】登录成功");

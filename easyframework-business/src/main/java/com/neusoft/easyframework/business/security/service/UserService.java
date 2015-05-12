@@ -100,7 +100,7 @@ public class UserService {
         String sql = "SELECT r.name FROM sec_user u " +
                 "LEFT OUTER JOIN sec_user_role ur ON u.id = ur.user_id " +
                 "LEFT OUTER JOIN sec_role r ON ur.role_id = r.id " +
-                "WEHRE u.id = ?";
+                "WHERE u.id = ?";
         SQLQuery query = userDao.createSQLQuery(sql, userId);
         return query.list();
     }
