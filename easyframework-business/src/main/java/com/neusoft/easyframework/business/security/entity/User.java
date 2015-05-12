@@ -22,7 +22,7 @@ public class User extends SecurityEntity {
 
     private int type;
 
-    private String enabled;
+    private boolean enabled;
 
     private Org org;
 
@@ -53,11 +53,11 @@ public class User extends SecurityEntity {
     }
 
     @Column(name = "enabled")
-    public String getEnabled() {
+    public boolean isEnabled() {
         return enabled;
     }
 
-    public void setEnabled(String enabled) {
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
