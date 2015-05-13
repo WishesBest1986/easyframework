@@ -37,7 +37,7 @@
                      <value>
                             /login = authc
                             /logout = logout
-                            /styles/** = anon
+                            /statics/** = anon
                             /common/** = anon
                             /index = authc
                      </value>
