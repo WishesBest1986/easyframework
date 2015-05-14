@@ -16,30 +16,22 @@
               <property name="unauthorizedUrl" value="/common/403.jsp" />
               <property name="filters">
                      <util:map>
-                            <entry key="authc" value-ref="formAuthenticationFilter" />
+
                      </util:map>
               </property>
 
               <property name="filterChainDefinitionMap" ref="definitionMetaSource" />
        </bean>
 
-       <bean id="formAuthenticationFilter" class="org.apache.shiro.web.filter.authc.FormAuthenticationFilter">
-              <property name="usernameParam" value="username" />
-              <property name="passwordParam" value="password" />
-              <property name="rememberMeParam" value="rememberMe" />
-              <property name="loginUrl" value="/login" />
-              <property name="successUrl" value="/index" />
-              <property name="failureKeyAttribute" value="shiroLoginFailure" />
-       </bean>
-
        <bean id="definitionMetaSource" class="com.neusoft.easyframework.business.security.shiro.ShiroDefinitionSectionMetaSource">
               <property name="filterChainDefinitions">
                      <value>
-                            /login = authc
-                            /logout = logout
+                            /login = anon
+                            /doLogin = anon
+                            /doLogout = logout
                             /statics/** = anon
                             /common/** = anon
-                            /index = authc
+                            /index = user
                      </value>
               </property>
        </bean>

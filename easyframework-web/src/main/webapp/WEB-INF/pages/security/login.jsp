@@ -2,76 +2,93 @@
 <%@ include file="/common/taglibs.jsp" %>
 <html>
 <head>
+  <meta http-equiv="x-ua-compatible" content="edge" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
   <title>用户登录</title>
 
-  <link rel="stylesheet" type="text/css" href="${ctx}/statics/js/jquery-easyui-1.4.2/themes/default/easyui.css" />
-  <link rel="stylesheet" type="text/css" href="${ctx}/statics/css/login.css" />
+  <!-- jQuery -->
   <script type="text/javascript" src="${ctx}/statics/js/jquery-1.11.3.min.js"></script>
+
+  <!-- jQueryForm -->
+  <script type="text/javascript" src="${ctx}/statics/js/jquery.form.js"></script>
+
+  <!-- easyUI -->
+  <link rel="stylesheet" type="text/css" href="${ctx}/statics/js/jquery-easyui-1.4.2/themes/default/easyui.css" />
   <script type="text/javascript" src="${ctx}/statics/js/jquery-easyui-1.4.2/jquery.easyui.min.js"></script>
+  <script type="text/javascript" src="${ctx}/statics/js/jquery-easyui-1.4.2/locale/easyui-lang-zh_CN.js"></script>
 
-  <style type="text/css">
-    body {
-      background-color: #e0ecff;
-    }
-    .layer1 {
-      font-size: x-large;
-    }
-    .login_border_table {
-      margin-left: 150px;
-    }
-    #layer1 {
-      position: absolute;
-      text-align: center;
-      left: 432px;
-      top: 100px;
-      width: 620px;
-      height: 153px;
-      z-index: 1;
-    }
-    #layer2 {
-      position: absolute;
-      left: 431px;
-      top: 203px;
-      width: 621px;
-      height: 264px;
-      z-index: 2;
-      border: 1px solid blue;
-      background-color: rgb(163, 195, 245);
-    }
-  </style>
+  <script type="text/javascript">
+    $(function() {
+      $('#loginForm').form({
+        url: '${ctx}/doLogin',
+        onSubmit: function() {
+          var isValid = $(this).form('validate');
+          return isValid;
+        },
+        success: function(result) {
+          result = $.parseJSON(result);
 
-  <style>.error{color:red}</style>
+          if (result.success) {
+            window.location.href = '${ctx}/index';
+          } else {
+            $.messager.show({
+              title: '提示',
+              msg: '<div class="light-info"><div class="light-tip icon-tip"></div><div>' + result.msg + '</div></div>'
+            });
+          }
+        }
+      });
+    });
+
+    function submitForm() {
+      $('#loginForm').submit();
+    }
+
+    function clearForm() {
+      $('#loginForm').form('clear');
+    }
+
+    function bindEnter(obj) {
+      if (obj.keyCode == 13) {
+        submitForm();
+        obj.returnValue = false;
+      }
+    }
+  </script>
 </head>
-<body>
-<div class="error">${error}</div>
-<div class="content">
-  <div class="layer1" id="layer1">通用后台管理系统</div>
-  <div class="layer2" id="layer2">
-    <form method="post">
-      <h1 class="login_title">用户登录</h1>
-      <div>&nbsp;</div>
-
-      <table class="login_border_table">
-        <tr>
-          <td><label>帐号：</label></td>
-          <td><input name="username" type="text" class="user" id="username" value="<shiro:principal />" /></td>
-        </tr>
-        <tr>
-          <td><label>密码：</label></td>
-          <td><input name="password" type="password" class="password" id="password" /></td>
-        </tr>
-        <tr>
-          <td><label>自动登录：</label></td>
-          <td><input name="rememberMe" type="checkbox" id="rememberMe" value="true" /></td>
-        </tr>
-        <tr>
-          <td colspan="2">
-            <input type="submit" class="login_btn" id="btn_login" value="登录" />
-          </td>
-        </tr>
-      </table>
-    </form>
+<body onkeydown="bindEnter(event)">
+  <div align="center">
+    <div class="easyui-panel" title="登录" style="width: 400px;">
+      <div style="padding: 10px 0 10px 100px;">
+        <form id="loginForm" method="post">
+          <table>
+            <tr>
+              <td>用户名:</td>
+              <td>
+                <input class="easyui-validatebox" type="text" name="username" value="<shiro:principal />" data-options="required:true" />
+              </td>
+            </tr>
+            <tr>
+              <td>密码:</td>
+              <td>
+                <input class="easyui-validatebox" type="password" name="password" data-options="required:true" />
+              </td>
+            </tr>
+            <tr>
+              <td>自动登录:</td>
+              <td>
+                <input type="checkbox" name="rememberMe" value="on" />
+              </td>
+            </tr>
+          </table>
+        </form>
+      </div>
+      <div style="text-align: center;padding: 5px;">
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">登录</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清除</a>
+      </div>
+    </div>
   </div>
-</div>
 </body>
 </html>
