@@ -25,7 +25,7 @@
     }
     .fitem label {
       display: inline-block;
-      widows: 80px;
+      width: 80px;
     }
   </style>
 
@@ -81,7 +81,6 @@
     <div title="系统首页" data-options="iconCls:'icon-tip'" style="overflow:hidden;padding: 5px;">
       <div style="margin: 10px 0;">
         <h1>欢迎使用后台管理系统</h1><br />
-        <h3>本系统供xx使用</h3>
       </div>
     </div>
   </div>
