@@ -1,16 +1,72 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: neusoft
-  Date: 15-5-6
-  Time: 下午1:24
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ include file="/common/taglibs.jsp" %>
+
 <html>
 <head>
-    <title></title>
+  <%@ include file="/common/meta.jsp" %>
+  <title>后台管理系统</title>
+  <%@ include file="/common/js.jsp" %>
+
+  <script type="text/javascript">
+    function editPwd() {
+      $('#editPwdDialog').dialog('open').dialog('setTitle', '修改密码');
+      $('#editPwdForm').form('clear');
+    }
+  </script>
 </head>
-<body>
-  Hello World!
+<body class="easyui-layout">
+
+<!-- 页眉LOGO -->
+<div data-options="region:'north'" style="height: 10%;padding: 2px;background: #E0ECFF;">
+  <div class="top_message">
+    <div class="top_span">您好,<shiro:principal />!</div>
+    <a href="javascript:void(0)" onclick="editPwd();">修改密码</a>
+    <a href="${ctx}/doLogout">退出</a>
+  </div>
+</div>
+
+<!-- 页脚版权 -->
+<div data-options="region:'south'" style="height: 5%;">
+
+</div>
+
+<!-- 右侧菜单 -->
+<div data-options="region:'west', iconCls:'icon-reload', split:true" title="功能菜单" style="width: 15%;padding: 1px;overflow: auto;height: auto;">
+  <div class="easyui-accordion" data-options="fit:true, border:false">
+    <div title="系统管理" style="padding: 10px;overflow: auto;">
+      <p align="center"><a href="javascript:void(0);" src="" class="cs-navi-tab">人员维护</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- 中部功能页面 -->
+<div data-options="region:'center'">
+
+</div>
+
+<!-- 修改密码弹出框 -->
+<div id="editPwdDialog" data-options="region:'center'" class="easyui-dialog" closed="true" buttons="#dlg-buttons" title="修改密码" style="width: 350px;height: 210px;">
+  <form id="editPwdForm" method="post" novalidate>
+    <div class="ftitle">密码修改</div>
+    <div class="fitem">
+      <label>原密码:</label>
+      <input name="oldPwd" type="password" class="easyui-validatebox" required="true" />
+    </div>
+    <div class="fitem">
+      <label>新密码:</label>
+      <input name="newPwd" type="password" class="easyui-validatebox" required="true" />
+    </div>
+    <div class="fitem">
+      <label>确认密码:</label>
+      <input name="rePwd" type="password" class="easyui-validatebox" required="true" validateType="equalTO['#newPwd']" />
+    </div>
+  </form>
+</div>
+<!-- 修改密码按钮 -->
+<div id="dlg-buttons">
+  <a href="javascript:void(0)" class="easyui-linkbutton" onclick="savePwd()" iconCls="icon-ok">确认</a>
+  <a href="javascript:void(0)" class="easyui-linkbutton" onclick="javascript:$('#editPwdDialog').dialog('close')" iconCls="icon-cancel">取消</a>
+</div>
+
 </body>
 </html>

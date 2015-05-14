@@ -2,21 +2,9 @@
 <%@ include file="/common/taglibs.jsp" %>
 <html>
 <head>
-  <meta http-equiv="x-ua-compatible" content="edge" />
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
+  <%@include file="/common/meta.jsp" %>
   <title>用户登录</title>
-
-  <!-- jQuery -->
-  <script type="text/javascript" src="${ctx}/statics/js/jquery-1.11.3.min.js"></script>
-
-  <!-- jQueryForm -->
-  <script type="text/javascript" src="${ctx}/statics/js/jquery.form.js"></script>
-
-  <!-- easyUI -->
-  <link rel="stylesheet" type="text/css" href="${ctx}/statics/js/jquery-easyui-1.4.2/themes/default/easyui.css" />
-  <script type="text/javascript" src="${ctx}/statics/js/jquery-easyui-1.4.2/jquery.easyui.min.js"></script>
-  <script type="text/javascript" src="${ctx}/statics/js/jquery-easyui-1.4.2/locale/easyui-lang-zh_CN.js"></script>
+  <%@ include file="/common/js.jsp" %>
 
   <script type="text/javascript">
     $(function() {
