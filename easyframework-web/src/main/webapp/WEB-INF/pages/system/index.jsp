@@ -29,7 +29,56 @@
     }
   </style>
 
+  <script type="text/javascript" src="${ctx}/statics/js/tab-control.js"></script>
   <script type="text/javascript">
+    $(function() {
+      var tabsObj = $('#tabs');
+      tabsObj.tabs({
+        fit: true,
+        border: false,
+        tools: [
+          {
+            iconCls: 'icon-tip',
+            handler: function() {
+              tabsObj.tabs('select', 0);
+            }
+          },
+          {
+            iconCls: 'icon-reload',
+            handler: function() {
+              var curTab = tabsObj.tabs('getSelected');
+              tabsObj.tabs('update', {
+                tab: curTab,
+                options: curTab.panel('options')
+              });
+            }
+          },
+          {
+            iconCls: 'icon-clear',
+            handler: function() {
+              var curTab = tabsObj.tabs('getSelected');
+              if (curTab.panel('options').closable) {
+                var curTabIndex = tabsObj.tabs('getTabIndex', curTab);
+                tabsObj.tabs('close', curTabIndex);
+              }
+            }
+          }
+        ]
+      });
+
+      $('.cs-navi-tab').click(function() {
+        var self = $(this);
+        var href = self.attr('src');
+        var title = self.text();
+
+        var params = {
+          url: href,
+          title: title
+        };
+        addTab(tabsObj, params);
+      });
+    });
+
     function editPwd() {
       $('#editPwdDialog').dialog('open').dialog('setTitle', '修改密码');
       $('#editPwdForm').form('clear');
@@ -77,7 +126,7 @@
 
 <!-- 中部功能页面 -->
 <div data-options="region:'center'">
-  <div id="tabs" class="easyui-tabs" data-options="tools:'#tab-tools'" fit="true" border="false">
+  <div id="tabs" class="easyui-tabs">
     <div title="系统首页" data-options="iconCls:'icon-tip'" style="overflow:hidden;padding: 5px;">
       <div style="margin: 10px 0;">
         <h1>欢迎使用后台管理系统</h1><br />
