@@ -59,7 +59,7 @@
             }
           },
           {
-            iconCls: 'icon-clear',
+            iconCls: 'icon-cancel',
             handler: function() {
               var curTab = tabsObj.tabs('getSelected');
               if (curTab.panel('options').closable) {

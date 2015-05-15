@@ -2,14 +2,15 @@ package com.neusoft.easyframework.web.controller.security;
 
 import com.neusoft.easyframework.business.security.entity.User;
 import com.neusoft.easyframework.business.security.service.UserService;
+import com.neusoft.easyframework.core.orm.Page;
+import com.neusoft.easyframework.core.orm.PropertyFilter;
 import com.neusoft.easyframework.web.entity.GridModel;
-import com.neusoft.easyframework.web.entity.JsonModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -28,13 +29,14 @@ public class UserController {
 
     @ResponseBody
     @RequestMapping(value = "list")
-    public GridModel<User> list() {
-        Long total = 1L;
-        List<User> users = userService.getAll();
+    public GridModel<User> list(Page<User> page, HttpServletRequest request) {
+        List<PropertyFilter> filters = PropertyFilter.buildFromHttpRequest(request);
+
+        Page<User> userPage = userService.findPage(page, filters);
 
         GridModel<User> gridModel = new GridModel<User>();
-        gridModel.setTotal(total);
-        gridModel.setRows(users);
+        gridModel.setTotal(userPage.getTotalCount());
+        gridModel.setRows(userPage.getResult());
 
         return gridModel;
     }
