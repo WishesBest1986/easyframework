@@ -1,3 +1,7 @@
+/**
+ * @param tabsObj
+ * @param params {url:xxx, title:xxx, iconCls:xxx, forceRefresh:false, loadNew:false}
+ */
 function addTab(tabsObj, params) {
     var frame = createFrame(params.url);
     var options = {

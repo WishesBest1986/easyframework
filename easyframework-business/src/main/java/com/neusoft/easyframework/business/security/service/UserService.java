@@ -49,6 +49,13 @@ public class UserService {
         return userDao.isPropertyUnique("username", newUserName, oldUserName);
     }
 
+    public boolean isPasswordMatch(User user, String password) {
+        byte[] salt = EncodeUtils.hexDecode(user.getSalt());
+        byte[] hashPassword = DigestUtils.sha1(password.getBytes(), salt, HASH_INTERATIONS);
+        String decodePassword = EncodeUtils.hexEncode(hashPassword);
+        return decodePassword.equals(user.getPassword());
+    }
+
     public List<User> getAll() {
         return userDao.getAll();
     }

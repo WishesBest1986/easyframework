@@ -54,7 +54,7 @@
             <tr>
               <td>用户名:</td>
               <td>
-                <input class="easyui-validatebox" type="text" name="username" value="<shiro:principal />" data-options="required:true" />
+                <input class="easyui-validatebox" type="text" name="username" value="" data-options="required:true" />
               </td>
             </tr>
             <tr>

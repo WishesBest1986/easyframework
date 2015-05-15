@@ -32,6 +32,12 @@
   <script type="text/javascript" src="${ctx}/statics/js/tab-control.js"></script>
   <script type="text/javascript">
     $(function() {
+      initNaviTabBar();
+
+      initEditPwdForm();
+    });
+
+    function initNaviTabBar() {
       var tabsObj = $('#tabs');
       tabsObj.tabs({
         fit: true,
@@ -77,11 +83,48 @@
         };
         addTab(tabsObj, params);
       });
-    });
+    }
+
+    function initEditPwdForm() {
+      $('#editPwdForm').form({
+        url: '${ctx}/doModifyPwd',
+        onSubmit: function() {
+          var isValid = $(this).form('validate');
+          return isValid;
+        },
+        success: function(result) {
+          result = $.parseJSON(result);
+          if (result.success) {
+            $('#editPwdDialog').dialog('close');
+            $.messager.alert('提示', '密码修改成功，请重新登录!', 'info', function() {
+              window.location.href = '${ctx}/doLogout';
+            });
+          } else {
+            var msg = result.msg;
+            if (!msg) {
+              msg = '未知错误';
+            }
+            $.messager.alert('错误', msg, 'error');
+          }
+        }
+      });
+    }
 
     function editPwd() {
       $('#editPwdDialog').dialog('open').dialog('setTitle', '修改密码');
       $('#editPwdForm').form('clear');
+    }
+
+    function savePwd() {
+      $('#editPwdForm').submit();
+    }
+
+    function logout() {
+      $.messager.confirm('提示', '确定要退出?', function(ret) {
+        if (ret) {
+          window.location.href = '${ctx}/doLogout';
+        }
+      })
     }
 
     <!-- 拓展easyUI的验证框架，验证两次输入值一致 -->
@@ -102,7 +145,7 @@
   <span style="float: right;padding-right: 20px;vertical-align: middle;margin-top: 10px;">
     欢迎<b>&nbsp;<shiro:principal /></b>!&nbsp;&nbsp;
     <a href="javascript:void(0)" onclick="editPwd();">修改密码</a> &nbsp;&nbsp;
-    <a href="${ctx}/doLogout">退出</a>
+    <a href="javascript:void(0)" onclick="logout();">退出</a>
   </span>
   <span style="float: left;padding-left: 20px;vertical-align: middle;margin-top: 5px;">
     <span style="font-size: 19px;font-weight: bold;font-family: 幼圆;">后台管理系统</span>
@@ -136,20 +179,20 @@
 </div>
 
 <!-- 修改密码弹出框 -->
-<div id="editPwdDialog" data-options="region:'center'" class="easyui-dialog" closed="true" buttons="#dlg-buttons" title="修改密码" style="width: 350px;height: 210px;">
+<div id="editPwdDialog" data-options="region:'center', modal:true" class="easyui-dialog" closed="true" buttons="#dlg-buttons" title="修改密码" style="width: 350px;height: 210px;">
   <form id="editPwdForm" method="post" novalidate>
     <div class="ftitle">密码修改</div>
     <div class="fitem">
       <label>原密码:</label>
-      <input name="oldPwd" type="password" class="easyui-validatebox" required="true" />
+      <input name="oldPassword" type="password" class="easyui-validatebox" required="true" />
     </div>
     <div class="fitem">
       <label>新密码:</label>
-      <input id="newPwd" name="newPwd" type="password" class="easyui-validatebox" required="true" />
+      <input id="newPassword" name="newPassword" type="password" class="easyui-validatebox" required="true" />
     </div>
     <div class="fitem">
       <label>确认密码:</label>
-      <input name="rePwd" type="password" class="easyui-validatebox" required="true" validType="equalTo['#newPwd']" />
+      <input name="rePassword" type="password" class="easyui-validatebox" required="true" validType="equalTo['#newPassword']" />
     </div>
   </form>
 </div>
