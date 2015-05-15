@@ -33,7 +33,6 @@
   <script type="text/javascript">
     $(function() {
       initNaviTabBar();
-
       initEditPwdForm();
     });
 
@@ -161,8 +160,12 @@
 <div data-options="region:'west', iconCls:'icon-reload', split:true" title="功能菜单" style="width: 15%;padding: 1px;overflow: auto;height: auto;">
   <div class="easyui-accordion" data-options="fit:true, border:false">
     <div title="系统管理" style="padding: 10px;overflow: auto;">
-      <p align="left"><a href="javascript:void(0);" src="http://www.baidu.com" class="cs-navi-tab">人员维护</a></p>
-      <p align="left"><a href="javascript:void(0);" src="${ctx}/index" class="cs-navi-tab">人员维护2</a></p>
+      <p align="left"><a href="javascript:void(0);" src="${ctx}/security/user" class="cs-navi-tab">用户管理</a></p>
+      <p align="left"><a href="javascript:void(0);" src="${ctx}/security/org" class="cs-navi-tab">部门管理</a></p>
+      <p align="left"><a href="javascript:void(0);" src="${ctx}/security/role" class="cs-navi-tab">角色管理</a></p>
+      <p align="left"><a href="javascript:void(0);" src="${ctx}/security/authority" class="cs-navi-tab">权限管理</a></p>
+      <p align="left"><a href="javascript:void(0);" src="${ctx}/security/resource" class="cs-navi-tab">资源管理</a></p>
+      <p align="left"><a href="javascript:void(0);" src="${ctx}/security/menu" class="cs-navi-tab">菜单管理</a></p>
     </div>
   </div>
 </div>
