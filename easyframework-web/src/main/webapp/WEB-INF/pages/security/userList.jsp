@@ -24,8 +24,8 @@
 
     function searchUser() {
       $('#dataGrid').datagrid('load', {
-        filter_LIKES_username: $('input[name=filter_LIKES_username]').val(),
-        filter_LIKES_fullname: $('input[name=filter_LIKES_fullname]').val()
+        filter_LIKES_username: $('input[name=username]').val(),
+        filter_LIKES_fullname: $('input[name=fullname]').val()
       });
     }
 
@@ -42,21 +42,52 @@
           {
             title: '登录名',
             field: 'username',
-            sortable: true
+            sortable: true,
+            width: 200
           }
         ]],
         columns: [[
           {
             title: '姓名',
             field: 'fullname',
-            sortable: true
+            sortable: true,
+            width: 200
           },
           {
             title: '是否可用',
             field: 'enabled',
-            sortable: true
+            sortable: true,
+            width: 200
           }
         ]],
+        toolbar: [
+          {
+            id: 'btnAdd',
+            text: '新建用户',
+            iconCls: 'icon-add',
+            handler: function() {
+              newUser();
+            }
+          },
+          '-',
+          {
+            id: 'btnEdit',
+            text: '修改用户',
+            iconCls: 'icon-edit',
+            handler: function () {
+              editUser();
+            }
+          },
+          '-',
+          {
+            id: 'btnDel',
+            text: '删除用户',
+            iconCls: 'icon-remove',
+            handler: function() {
+              deleteUser();
+            }
+          }
+        ],
         onBeforeLoad: function(param) {
           // redefine pagination parameter names.
           if (param.page) {
@@ -77,6 +108,43 @@
         pageList: [10, 20, 50, 100]
       });
     }
+
+    function newUser() {
+
+    }
+
+    function editUser() {
+      var row = $('#dataGrid').datagrid('getSelected');
+      if (row) {
+
+      } else {
+        $.messager.alert('提示', '请先选择待编辑的用户!', 'info');
+      }
+    }
+
+    function deleteUser() {
+      var row = $('#dataGrid').datagrid('getSelected');
+      if (row) {
+        $.messager.confirm('提示', '确认要删除用户', function(ret) {
+          if (ret) {
+            var url = '';
+            var data = {};
+            $.post(url, data, function(result) {
+              if (result.success) {
+                $('#dataGrid').datagrid('reload');
+              } else {
+                $.messager.show({
+                  title: '错误',
+                  msg: result.msg
+                })
+              }
+            }, 'json');
+          }
+        });
+      } else {
+        $.messager.alert('提示', '请先选择待删除的用户!', 'info');
+      }
+    }
   </script>
 
 </head>
@@ -86,10 +154,10 @@
     <table width="100%">
       <tr>
         <td>
-          登录名: <input name="filter_LIKES_username" style="width: 200px;" />
+          登录名: <input name="username" style="width: 200px;" />
         </td>
         <td>
-          姓名: <input name="filter_LIKES_fullname" style="width: 200px;" />
+          姓名: <input name="fullname" style="width: 200px;" />
         </td>
         <td align="center">
           <a href="javascript:void(0)" onclick="clearForm();" class="easyui-linkbutton" iconCls="icon-clear">清空</a>
