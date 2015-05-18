@@ -181,6 +181,10 @@
       var row = $('#dataGrid').datagrid('getSelected');
       if (row) {
         $('#dlg').dialog('open').dialog('setTitle', '编辑菜单');
+        if (row.parentMenu) {
+          row.parentMenuId = row.parentMenu.id;
+        }
+        $('#modifyForm').form('clear');
         $('#modifyForm').form('load', row);
       } else {
         $.messager.alert('提示', '请先选择待编辑的菜单!', 'info');
