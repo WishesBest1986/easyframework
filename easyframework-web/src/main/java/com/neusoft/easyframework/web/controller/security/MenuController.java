@@ -89,12 +89,24 @@ public class MenuController {
             EasyUITreeModel model = new EasyUITreeModel();
             model.setId(menu.getId().toString());
             model.setText(menu.getName());
-            if (menu.getParentMenu() != null) {
-                model.setPid(menu.getParentMenu().getId().toString());
+            if (menu.getParentMenu() == null) {
+                recursionCreateTreeModel(model, menu.getSubMenus());
+                treeModelList.add(model);
             }
-            treeModelList.add(model);
         }
 
         return treeModelList;
+    }
+
+    private void recursionCreateTreeModel(EasyUITreeModel treeModel, List<Menu> subMenus) {
+        for (Menu subMenu : subMenus) {
+            EasyUITreeModel subModel = new EasyUITreeModel();
+            subModel.setId(subMenu.getId().toString());
+            subModel.setText(subMenu.getName());
+            if (subMenu.getSubMenus() != null && subMenu.getSubMenus().size() > 0) {
+                recursionCreateTreeModel(subModel, subMenu.getSubMenus());
+            }
+            treeModel.getChildren().add(subModel);
+        }
     }
 }
