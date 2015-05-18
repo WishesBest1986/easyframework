@@ -75,9 +75,15 @@
           },
           {
             title: '上级菜单名称',
-            field: 'name',
-            sortable: true,
-            width: 200
+            field: 'parentMenu',
+            width: 200,
+            formatter: function(value, row, index) {
+              if (row.parentMenu) {
+                return row.parentMenu.name;
+              } else {
+                return value;
+              }
+            }
           },
           {
             title: '排序号',
