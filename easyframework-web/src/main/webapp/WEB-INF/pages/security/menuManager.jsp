@@ -155,6 +155,7 @@
           if (result.success) {
             $('#dlg').dialog('close');
             $('#dataGrid').datagrid('reload');
+            $('#parentMenuId').combotree('reload');
           } else {
             $.messager.show({
               title: '错误',
@@ -202,6 +203,7 @@
               if (result.success) {
                 $('#dlg').dialog('close');
                 $('#dataGrid').datagrid('reload');
+                $('#parentMenuId').combotree('reload');
               } else {
                 $.messager.show({
                   title: '错误',
