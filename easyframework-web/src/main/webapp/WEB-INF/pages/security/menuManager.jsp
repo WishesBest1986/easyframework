@@ -78,8 +78,8 @@
             field: 'parentMenu',
             width: 200,
             formatter: function(value, row, index) {
-              if (row.parentMenu) {
-                return row.parentMenu.name;
+              if (value) {
+                return value.name;
               } else {
                 return value;
               }
