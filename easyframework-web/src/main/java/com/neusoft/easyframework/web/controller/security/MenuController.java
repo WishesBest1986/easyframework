@@ -37,16 +37,9 @@ public class MenuController {
 
         Page<Menu> menuPage = menuService.findPage(page, filters);
 
-        List<Menu> list = menuPage.getResult();
-//        for (Menu menu : list) {
-//            for (Menu subMenu : menu.getSubMenus()) {
-//                subMenu.getName();
-//            }
-//        }
-
         GridModel<Menu> gridModel = new GridModel<Menu>();
         gridModel.setTotal(menuPage.getTotalCount());
-        gridModel.setRows(/*menuPage.getResult()*/list);
+        gridModel.setRows(menuPage.getResult());
 
         return gridModel;
     }
