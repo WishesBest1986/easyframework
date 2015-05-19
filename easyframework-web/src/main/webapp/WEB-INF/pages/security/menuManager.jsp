@@ -174,13 +174,17 @@
         url: '${ctx}/security/menu/allTree',
         lines: true,
         onBeforeSelect: function(node) {
-          if (parentOrSelfTree(editingMenuId, node)) {
-            $.messager.show({
-              title: '错误',
-              msg: '请勿选择本身或者子菜单作为父菜单'
-            });
+          if (editingMenuId) {
+            if (parentOrSelfTree(editingMenuId, node)) {
+              $.messager.show({
+                title: '错误',
+                msg: '请勿选择本身或者子菜单作为父菜单'
+              });
 
-            return false;
+              return false;
+            } else {
+              return true;
+            }
           } else {
             return true;
           }
@@ -189,7 +193,7 @@
     }
 
     function parentOrSelfTree(menuId, selectedNode) {
-      var ret = menuId == selectedNode.id;
+      var ret = (menuId == selectedNode.id);
 
       if (!ret) {
         var menuTreeObj = $('#parentMenuId').combotree('tree');
