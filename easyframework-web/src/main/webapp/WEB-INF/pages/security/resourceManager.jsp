@@ -229,7 +229,7 @@
         </td>
         <td align="center">
           <a href="javascript:void(0)" onclick="clearForm();" class="easyui-linkbutton" iconCls="icon-clear">清空</a>
-          <a href="javascript:void(0)" onclick="searchMenu();" class="easyui-linkbutton" iconCls="icon-search">查询</a>
+          <a href="javascript:void(0)" onclick="searchResource();" class="easyui-linkbutton" iconCls="icon-search">查询</a>
         </td>
       </tr>
     </table>
