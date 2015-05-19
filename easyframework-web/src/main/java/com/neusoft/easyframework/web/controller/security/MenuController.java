@@ -55,7 +55,19 @@ public class MenuController {
         }
 
         try {
-            menuService.save(menu);
+            Menu editMenu = null;
+            if (menu.getId() != null) {
+                editMenu = menuService.get(menu.getId()); // 防止编辑丢失子节点
+
+                editMenu.setName(menu.getName());
+                editMenu.setDescription(menu.getDescription());
+                editMenu.setOrderNum(menu.getOrderNum());
+                editMenu.setParentMenu(menu.getParentMenu());
+            } else {
+                editMenu = menu;
+            }
+
+            menuService.save(editMenu);
             jsonModel.setSuccess(true);
         } catch (Exception e) {
             jsonModel.setMsg(e.getMessage());

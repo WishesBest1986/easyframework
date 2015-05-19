@@ -76,6 +76,7 @@
           {
             title: '上级菜单名称',
             field: 'parentMenu',
+            sortable: true,
             width: 200,
             formatter: function(value, row, index) {
               if (value) {
@@ -265,7 +266,7 @@
     </div>
     <div class="fitem">
       <label>上级菜单：</label>
-      <select id="parentMenuId" name="parentMenuId"></select>
+      <select id="parentMenuId" name="parentMenuId" style="width: 150px;"></select>
       <a class="easyui-linkbutton" href="javascript:void(0)" onclick="$('#parentMenuId').combotree('clear');">清空</a>
     </div>
   </form>
