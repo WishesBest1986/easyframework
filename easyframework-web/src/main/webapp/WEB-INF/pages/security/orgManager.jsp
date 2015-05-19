@@ -4,7 +4,7 @@
 <html>
 <head>
   <%@ include file="/common/meta.jsp" %>
-  <title>菜单管理</title>
+  <title>部门管理</title>
   <%@ include file="/common/js.jsp" %>
 
   <style type="text/css">
@@ -26,6 +26,8 @@
   </style>
 
   <script type="text/javascript">
+    var editingOrgId = null;
+
     $(function() {
       initSearchForm();
       initDataGrid();
@@ -38,10 +40,10 @@
 
     function clearForm() {
       $('#queryForm').form('clear');
-      searchMenu();
+      searchOrg();
     }
 
-    function searchMenu() {
+    function searchOrg() {
       $('#dataGrid').datagrid('load', {
         filter_LIKES_name: $('input[name=name]').val(),
         filter_LIKES_description: $('input[name=description]').val()
@@ -52,7 +54,7 @@
       var dataGrid = $('#dataGrid');
 
       dataGrid.datagrid({
-        url: '${ctx}/security/menu/list',
+        url: '${ctx}/security/org/list',
         pagination: true,
         fit: true,
         singleSelect: true,
@@ -60,7 +62,7 @@
         idField: 'id',
         frozenColumns: [[
           {
-            title: '菜单名称',
+            title: '部门名称',
             field: 'name',
             sortable: true,
             width: 200
@@ -68,14 +70,14 @@
         ]],
         columns: [[
           {
-            title: '菜单描述',
+            title: '部门描述',
             field: 'description',
             sortable: true,
             width: 250
           },
           {
-            title: '上级菜单名称',
-            field: 'parentMenu',
+            title: '上级部门名称',
+            field: 'parentOrg',
             sortable: true,
             width: 200,
             formatter: function(value, row, index) {
@@ -85,38 +87,33 @@
                 return value;
               }
             }
-          },
-          {
-            title: '排序号',
-            field: 'orderNum',
-            width: 150
           }
         ]],
         toolbar: [
           {
             id: 'btnAdd',
-            text: '新建菜单',
+            text: '新建部门',
             iconCls: 'icon-add',
             handler: function() {
-              newMenu();
+              newOrg();
             }
           },
           '-',
           {
             id: 'btnEdit',
-            text: '修改菜单',
+            text: '修改部门',
             iconCls: 'icon-edit',
             handler: function () {
-              editMenu();
+              editOrg();
             }
           },
           '-',
           {
             id: 'btnDel',
-            text: '删除菜单',
+            text: '删除部门',
             iconCls: 'icon-remove',
             handler: function() {
-              deleteMenu();
+              deleteOrg();
             }
           }
         ],
@@ -142,10 +139,10 @@
     }
 
     function initModifyForm() {
-      initParentMenuComboTree();
+      initParentOrgComboTree();
 
       $('#modifyForm').form({
-        url: '${ctx}/security/menu/doModify',
+        url: '${ctx}/security/org/doModify',
         onSubmit: function() {
           var isValid = $(this).form('validate');
           return isValid;
@@ -156,7 +153,7 @@
           if (result.success) {
             $('#dlg').dialog('close');
             $('#dataGrid').datagrid('reload');
-            $('#parentMenuId').combotree('reload');
+            $('#parentOrgId').combotree('reload');
           } else {
             $.messager.show({
               title: '错误',
@@ -167,44 +164,81 @@
       });
     }
 
-    function initParentMenuComboTree() {
-      $('#parentMenuId').combotree({
-        url: '${ctx}/security/menu/allTree',
-        lines: true
+    function initParentOrgComboTree() {
+      $('#parentOrgId').combotree({
+        url: '${ctx}/security/org/allTree',
+        lines: true,
+        onBeforeSelect: function(node) {
+          if (editingOrgId) {
+            if (parentOrSelfTree(editingOrgId, node)) {
+              $.messager.show({
+                title: '错误',
+                msg: '请勿选择本身或者子菜单作为父菜单'
+              });
+
+              return false;
+            } else {
+              return true;
+            }
+          } else {
+            return true;
+          }
+        }
       });
     }
 
-    function newMenu() {
-      $('#dlg').dialog('open').dialog('setTitle', '新建菜单');
+    function parentOrSelfTree(menuId, selectedNode) {
+      var ret = (menuId == selectedNode.id);
+
+      if (!ret) {
+        var menuTreeObj = $('#parentOrgId').combotree('tree');
+        var parentNode = menuTreeObj.tree('getParent', selectedNode.target);
+        while (parentNode) {
+          if (parentNode.id == menuId) {
+            ret = true;
+            break;
+          }
+
+          parentNode = menuTreeObj.tree('getParent', parentNode.target);
+        }
+      }
+
+      return ret;
+    }
+
+    function newOrg() {
+      editingOrgId = null;
+      $('#dlg').dialog('open').dialog('setTitle', '新建部门');
       $('#modifyForm').form('clear');
     }
 
-    function editMenu() {
+    function editOrg() {
       var row = $('#dataGrid').datagrid('getSelected');
       if (row) {
-        $('#dlg').dialog('open').dialog('setTitle', '编辑菜单');
-        if (row.parentMenu) {
-          row.parentMenuId = row.parentMenu.id;
+        editingOrgId = row.id;
+        $('#dlg').dialog('open').dialog('setTitle', '编辑部门');
+        if (row.parentOrg) {
+          row.parentOrgId = row.parentOrg.id;
         }
         $('#modifyForm').form('clear');
         $('#modifyForm').form('load', row);
       } else {
-        $.messager.alert('提示', '请先选择待编辑的菜单!', 'info');
+        $.messager.alert('提示', '请先选择待编辑的部门!', 'info');
       }
     }
 
-    function deleteMenu() {
+    function deleteOrg() {
       var row = $('#dataGrid').datagrid('getSelected');
       if (row) {
-        $.messager.confirm('提示', '确认要删除菜单', function(ret) {
+        $.messager.confirm('提示', '确认要删除部门', function(ret) {
           if (ret) {
-            var url = '${ctx}/security/menu/doDelete';
+            var url = '${ctx}/security/org/doDelete';
             var data = {id : row.id};
             $.post(url, data, function(result) {
               if (result.success) {
                 $('#dlg').dialog('close');
                 $('#dataGrid').datagrid('reload');
-                $('#parentMenuId').combotree('reload');
+                $('#parentOrgId').combotree('reload');
               } else {
                 $.messager.show({
                   title: '错误',
@@ -215,11 +249,11 @@
           }
         });
       } else {
-        $.messager.alert('提示', '请先选择待删除的菜单!', 'info');
+        $.messager.alert('提示', '请先选择待删除的部门!', 'info');
       }
     }
 
-    function saveMenu() {
+    function saveOrg() {
       $('#modifyForm').submit();
     }
   </script>
@@ -231,48 +265,44 @@
     <table width="100%">
       <tr>
         <td>
-          菜单名称: <input name="name" style="width: 200px;" />
+          部门名称: <input name="name" style="width: 200px;" />
         </td>
         <td>
-          菜单描述: <input name="description" style="width: 200px;" />
+          部门描述: <input name="description" style="width: 200px;" />
         </td>
         <td align="center">
           <a href="javascript:void(0)" onclick="clearForm();" class="easyui-linkbutton" iconCls="icon-clear">清空</a>
-          <a href="javascript:void(0)" onclick="searchMenu();" class="easyui-linkbutton" iconCls="icon-search">查询</a>
+          <a href="javascript:void(0)" onclick="searchOrg();" class="easyui-linkbutton" iconCls="icon-search">查询</a>
         </td>
       </tr>
     </table>
   </form>
 </div>
-<div data-options="region:'center', border:false, title:'菜单管理'" style="overflow-y: auto;">
+<div data-options="region:'center', border:false, title:'部门管理'" style="overflow-y: auto;">
   <table id="dataGrid" data-options="fit:true, border:false"></table>
 </div>
 
 <div id="dlg" class="easyui-dialog" data-options="region:'center', modal:true" style="width: 400px;padding: 10px 20px;" closed="true" buttons="#dlg-buttons">
-  <div class="ftitle">菜单信息</div>
+  <div class="ftitle">部门信息</div>
   <form id="modifyForm" method="post" novalidate>
     <input type="hidden" name="id" />
     <div class="fitem">
-      <label>菜单名称：</label>
+      <label>部门名称：</label>
       <input name="name" class="easyui-textbox" required="true" />
     </div>
     <div class="fitem">
-      <label>菜单描述：</label>
+      <label>部门描述：</label>
       <input name="description" class="easyui-textbox" />
     </div>
     <div class="fitem">
-      <label>排序号：</label>
-      <input name="orderNum" class="easyui-numberspinner" />
-    </div>
-    <div class="fitem">
-      <label>上级菜单：</label>
-      <select id="parentMenuId" name="parentMenuId" style="width: 150px;"></select>
-      <a class="easyui-linkbutton" href="javascript:void(0)" onclick="$('#parentMenuId').combotree('clear');">清空</a>
+      <label>上级部门：</label>
+      <select id="parentOrgId" name="parentOrgId" style="width: 150px;"></select>
+      <a class="easyui-linkbutton" href="javascript:void(0)" onclick="$('#parentOrgId').combotree('clear');">清空</a>
     </div>
   </form>
 </div>
 <div id="dlg-buttons">
-  <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveMenu()" style="width: 90px;">保存</a>
+  <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveOrg()" style="width: 90px;">保存</a>
   <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" style="width: 90px;">取消</a>
 </div>
 

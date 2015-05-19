@@ -1,5 +1,7 @@
 package com.neusoft.easyframework.business.security.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,12 +20,11 @@ public class Org extends SecurityEntity {
 
     private String description;
 
-    private String fullname;
-
     private String type;
 
     private Org parentOrg;
 
+    @JsonBackReference
     private List<Org> orgs = new ArrayList<Org>();
 
     private List<User> users = new ArrayList<User>();
@@ -61,15 +62,6 @@ public class Org extends SecurityEntity {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    @Column(name = "fullname", length = 200)
-    public String getFullname() {
-        return fullname;
-    }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
     }
 
     @Column(name = "type", length = 200)
