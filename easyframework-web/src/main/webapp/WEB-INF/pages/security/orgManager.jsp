@@ -26,8 +26,6 @@
   </style>
 
   <script type="text/javascript">
-    var editingMenuId = null;
-
     $(function() {
       initSearchForm();
       initDataGrid();
@@ -163,7 +161,7 @@
             $.messager.show({
               title: '错误',
               msg: result.msg
-            });
+            })
           }
         }
       });
@@ -172,43 +170,11 @@
     function initParentMenuComboTree() {
       $('#parentMenuId').combotree({
         url: '${ctx}/security/menu/allTree',
-        lines: true,
-        onBeforeSelect: function(node) {
-          if (parentOrSelfTree(editingMenuId, node)) {
-            $.messager.show({
-              title: '错误',
-              msg: '请勿选择本身或者子菜单作为父菜单'
-            });
-
-            return false;
-          } else {
-            return true;
-          }
-        }
+        lines: true
       });
     }
 
-    function parentOrSelfTree(menuId, selectedNode) {
-      var ret = menuId == selectedNode.id;
-
-      if (!ret) {
-        var menuTreeObj = $('#parentMenuId').combotree('tree');
-        var parentNode = menuTreeObj.tree('getParent', selectedNode.target);
-        while (parentNode) {
-          if (parentNode.id == menuId) {
-            ret = true;
-            break;
-          }
-
-          parentNode = menuTreeObj.tree('getParent', parentNode.target);
-        }
-      }
-
-      return ret;
-    }
-
     function newMenu() {
-      editingMenuId = null;
       $('#dlg').dialog('open').dialog('setTitle', '新建菜单');
       $('#modifyForm').form('clear');
     }
@@ -216,7 +182,6 @@
     function editMenu() {
       var row = $('#dataGrid').datagrid('getSelected');
       if (row) {
-        editingMenuId = row.id;
         $('#dlg').dialog('open').dialog('setTitle', '编辑菜单');
         if (row.parentMenu) {
           row.parentMenuId = row.parentMenu.id;

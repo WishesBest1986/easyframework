@@ -114,6 +114,7 @@ public class MenuController {
         for (Menu subMenu : subMenus) {
             EasyUITreeModel subModel = new EasyUITreeModel();
             subModel.setId(subMenu.getId().toString());
+            subModel.setPid(treeModel.getId().toString());
             subModel.setText(subMenu.getName());
             if (subMenu.getSubMenus() != null && subMenu.getSubMenus().size() > 0) {
                 recursionCreateTreeModel(subModel, subMenu.getSubMenus());
