@@ -5,6 +5,7 @@ import com.neusoft.easyframework.business.security.entity.Resource;
 import com.neusoft.easyframework.business.security.service.AuthorityService;
 import com.neusoft.easyframework.core.orm.Page;
 import com.neusoft.easyframework.core.orm.PropertyFilter;
+import com.neusoft.easyframework.web.entity.EasyUITreeModel;
 import com.neusoft.easyframework.web.entity.GridModel;
 import com.neusoft.easyframework.web.entity.JsonModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -76,5 +78,42 @@ public class AuthorityController {
         }
 
         return jsonModel;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "doDelete")
+    public JsonModel doDelete(Long id) {
+        JsonModel jsonModel = new JsonModel();
+
+        try {
+            authorityService.delete(id);
+            jsonModel.setSuccess(true);
+        } catch (Exception e) {
+            jsonModel.setMsg(e.getMessage());
+        }
+
+        return jsonModel;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "allTree")
+    public List<EasyUITreeModel> allTree() {
+        List<EasyUITreeModel> treeModelList = new ArrayList<EasyUITreeModel>();
+
+        EasyUITreeModel rootTreeModel = new EasyUITreeModel();
+        rootTreeModel.setId("");
+        rootTreeModel.setText("全选");
+        treeModelList.add(rootTreeModel);
+
+        List<Authority> authorities = authorityService.getAll();
+        for (Authority authority : authorities) {
+            EasyUITreeModel treeModel = new EasyUITreeModel();
+            treeModel.setId(authority.getId().toString());
+            treeModel.setText(authority.getName());
+
+            rootTreeModel.getChildren().add(treeModel);
+        }
+
+        return treeModelList;
     }
 }

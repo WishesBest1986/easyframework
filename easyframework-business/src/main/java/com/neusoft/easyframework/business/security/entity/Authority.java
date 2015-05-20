@@ -1,5 +1,7 @@
 package com.neusoft.easyframework.business.security.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +18,7 @@ public class Authority extends SecurityEntity {
 
     private List<Resource> resources = new ArrayList<Resource>();
 
+    @JsonBackReference
     private List<Role> roles = new ArrayList<Role>();
 
     private List<User> users = new ArrayList<User>();
