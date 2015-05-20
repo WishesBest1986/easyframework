@@ -88,11 +88,17 @@ public class UserService {
      * @return
      */
     public List<String> getAuthoritiesName(Long userId) {
-        String sql = "SELECT a.name FROM sec_user u " +
-                "LEFT OUTER JOIN sec_user_role ur ON u.id = ur.user_id " +
-                "LEFT OUTER JOIN sec_role r ON ur.role_id = r.id " +
-                "LEFT OUTER JOIN sec_role_authority ra ON r.id = ra.role_id " +
-                "LEFT OUTER JOIN sec_authority a ON ra.authority_id = a.id " +
+//        String sql = "SELECT a.name FROM sec_user u " +
+//                "LEFT OUTER JOIN sec_user_role ur ON u.id = ur.user_id " +
+//                "LEFT OUTER JOIN sec_role r ON ur.role_id = r.id " +
+//                "LEFT OUTER JOIN sec_role_authority ra ON r.id = ra.role_id " +
+//                "LEFT OUTER JOIN sec_authority a ON ra.authority_id = a.id " +
+//                "WHERE u.id = ?";
+        String sql = "SELECT a.name FROM sec_authority a " +
+                "JOIN sec_role_authority ra ON a.id = ra.authority_id " +
+                "JOIN sec_role r ON ra.role_id = r.id " +
+                "JOIN sec_user_role ur ON r.id = ur.role_id " +
+                "JOIN sec_user u ON ur.user_id = u.id " +
                 "WHERE u.id = ?";
         SQLQuery query = userDao.createSQLQuery(sql, userId);
         return query.list();
@@ -104,9 +110,13 @@ public class UserService {
      * @return
      */
     public List<String> getRolesName(Long userId) {
-        String sql = "SELECT r.name FROM sec_user u " +
-                "LEFT OUTER JOIN sec_user_role ur ON u.id = ur.user_id " +
-                "LEFT OUTER JOIN sec_role r ON ur.role_id = r.id " +
+//        String sql = "SELECT r.name FROM sec_user u " +
+//                "LEFT OUTER JOIN sec_user_role ur ON u.id = ur.user_id " +
+//                "LEFT OUTER JOIN sec_role r ON ur.role_id = r.id " +
+//                "WHERE u.id = ?";
+        String sql = "SELECT r.name FROM sec_role r " +
+                "JOIN sec_user_role ur ON r.id = ur.role_id " +
+                "JOIN sec_user u ON ur.user_id = u.id " +
                 "WHERE u.id = ?";
         SQLQuery query = userDao.createSQLQuery(sql, userId);
         return query.list();
