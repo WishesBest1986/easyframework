@@ -93,9 +93,7 @@ public class ResourceController {
         treeModelList.add(rootTreeModel);
 
         List<Resource> resources = resourceService.getAll();
-        Set<Resource> resourceSet = new HashSet<Resource>();
-        resourceSet.addAll(resources);
-        for (Resource resource : resourceSet) {
+        for (Resource resource : resources) {
             EasyUITreeModel treeModel = new EasyUITreeModel();
             treeModel.setId(resource.getId().toString());
             treeModel.setText(resource.getName());

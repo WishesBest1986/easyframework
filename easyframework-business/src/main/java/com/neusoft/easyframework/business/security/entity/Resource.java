@@ -57,7 +57,7 @@ public class Resource extends SecurityEntity {
         this.menu = menu;
     }
 
-    @ManyToMany(mappedBy = "resources", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "resources")
     public List<Authority> getAuthorities() {
         return authorities;
     }

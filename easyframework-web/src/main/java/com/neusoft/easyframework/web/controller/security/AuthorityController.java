@@ -3,7 +3,6 @@ package com.neusoft.easyframework.web.controller.security;
 import com.neusoft.easyframework.business.security.entity.Authority;
 import com.neusoft.easyframework.business.security.entity.Resource;
 import com.neusoft.easyframework.business.security.service.AuthorityService;
-import com.neusoft.easyframework.business.security.service.ResourceService;
 import com.neusoft.easyframework.core.orm.Page;
 import com.neusoft.easyframework.core.orm.PropertyFilter;
 import com.neusoft.easyframework.web.entity.GridModel;
@@ -24,9 +23,6 @@ import java.util.List;
 public class AuthorityController {
     @Autowired
     private AuthorityService authorityService;
-
-    @Autowired
-    private ResourceService resourceService;
 
     @RequestMapping
     public String manager() {
