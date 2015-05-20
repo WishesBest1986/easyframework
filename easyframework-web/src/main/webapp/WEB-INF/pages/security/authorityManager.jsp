@@ -152,19 +152,29 @@
       $('#resourceIds').combotree({
         url: '${ctx}/security/resource/allTree',
         lines: true,
+        multiple: true,
         cascadeCheck: true,
-        onCheck: function(node, checked) {
-          var nodes = $('#resourceIds').combotree('tree').tree('getChecked');
-          for (var i = 0; i < nodes.length; i ++) {
-            var node = nodes[i];
-
-            if (!node.id) {
-              $('#resourceIds ~ .combo .textbox-text').val('全选');
-              break;
-            }
-          }
+        onChange: function(newValue, oldValue) {
+          comboTreeFilterAllCondition();
+        },
+        onShowPanel: function() {
+          comboTreeFilterAllCondition();
+        },
+        onHidePanel: function() {
+          comboTreeFilterAllCondition();
         }
       });
+    }
+
+    function comboTreeFilterAllCondition() {
+      var nodes = $('#resourceIds').combotree('tree').tree('getChecked');
+      for (var i = 0; i < nodes.length; i ++) {
+        var node = nodes[i];
+        if (!node.id) {
+          $('#resourceIds ~ .combo .textbox-text').val('全选');
+          break;
+        }
+      }
     }
 
     function newAuthority() {
@@ -178,9 +188,14 @@
       if (row) {
         $('#resourceIds').combotree('reload');
         $('#dlg').dialog('open').dialog('setTitle', '编辑权限');
-//        if (row.resources) {
-//          row.parentMenuId = row.parentMenu.id;
-//        }
+        if (row.resources) {
+          var resourceIds = new Array();
+          for (var i = 0; i < row.resources.length; i ++) {
+            var resource = row.resources[i];
+            resourceIds.push(resource.id);
+          }
+          row.resourceIds = resourceIds;
+        }
         $('#modifyForm').form('clear');
         $('#modifyForm').form('load', row);
       } else {
@@ -256,7 +271,7 @@
     </div>
     <div class="fitem">
       <label>资源列表：</label>
-      <select id="resourceIds" name="resourceIds" multiple style="width: 150px;"></select>
+      <select id="resourceIds" name="resourceIds" style="width: 150px;"></select>
       <a class="easyui-linkbutton" href="javascript:void(0)" onclick="$('#resourceIds').combotree('clear');">清空</a>
     </div>
   </form>

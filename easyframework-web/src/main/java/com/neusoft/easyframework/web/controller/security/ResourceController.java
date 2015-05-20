@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by neusoft on 15-5-19.
@@ -86,11 +88,14 @@ public class ResourceController {
         List<EasyUITreeModel> treeModelList = new ArrayList<EasyUITreeModel>();
 
         EasyUITreeModel rootTreeModel = new EasyUITreeModel();
+        rootTreeModel.setId("");
         rootTreeModel.setText("全选");
         treeModelList.add(rootTreeModel);
 
         List<Resource> resources = resourceService.getAll();
-        for (Resource resource : resources) {
+        Set<Resource> resourceSet = new HashSet<Resource>();
+        resourceSet.addAll(resources);
+        for (Resource resource : resourceSet) {
             EasyUITreeModel treeModel = new EasyUITreeModel();
             treeModel.setId(resource.getId().toString());
             treeModel.setText(resource.getName());

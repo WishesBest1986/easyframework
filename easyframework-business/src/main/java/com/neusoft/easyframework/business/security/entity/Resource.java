@@ -1,5 +1,7 @@
 package com.neusoft.easyframework.business.security.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +18,7 @@ public class Resource extends SecurityEntity {
 
     private Menu menu;
 
+    @JsonBackReference
     private List<Authority> authorities = new ArrayList<Authority>();
 
     public Resource() {
