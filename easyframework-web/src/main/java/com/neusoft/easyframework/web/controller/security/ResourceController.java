@@ -5,6 +5,7 @@ import com.neusoft.easyframework.business.security.entity.Resource;
 import com.neusoft.easyframework.business.security.service.ResourceService;
 import com.neusoft.easyframework.core.orm.Page;
 import com.neusoft.easyframework.core.orm.PropertyFilter;
+import com.neusoft.easyframework.web.entity.EasyUITreeModel;
 import com.neusoft.easyframework.web.entity.GridModel;
 import com.neusoft.easyframework.web.entity.JsonModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -76,5 +78,26 @@ public class ResourceController {
         }
 
         return jsonModel;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "allTree")
+    public List<EasyUITreeModel> allTree() {
+        List<EasyUITreeModel> treeModelList = new ArrayList<EasyUITreeModel>();
+
+        EasyUITreeModel rootTreeModel = new EasyUITreeModel();
+        rootTreeModel.setText("全选");
+        treeModelList.add(rootTreeModel);
+
+        List<Resource> resources = resourceService.getAll();
+        for (Resource resource : resources) {
+            EasyUITreeModel treeModel = new EasyUITreeModel();
+            treeModel.setId(resource.getId().toString());
+            treeModel.setText(resource.getName());
+
+            rootTreeModel.getChildren().add(treeModel);
+        }
+
+        return treeModelList;
     }
 }
