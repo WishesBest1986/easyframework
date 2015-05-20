@@ -5,6 +5,8 @@ import com.neusoft.easyframework.business.security.entity.Resource;
 import com.neusoft.easyframework.business.security.service.ResourceService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.config.Ini;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.FactoryBean;
@@ -26,6 +28,9 @@ public class ShiroDefinitionSectionMetaSource implements FactoryBean<Ini.Section
     @Autowired
     private ResourceService resourceService;
 
+    @Autowired
+    private SessionFactory sessionFactory;
+
     private String filterChainDefinitions;
 
     public void setFilterChainDefinitions(String filterChainDefinitions) {
@@ -38,10 +43,13 @@ public class ShiroDefinitionSectionMetaSource implements FactoryBean<Ini.Section
         Ini.Section section = ini.getSection(Ini.DEFAULT_SECTION_NAME);
         // 由注入的资源管理对象获取所有资源数据，并且Resource的authorities的属性是EAGER的fetch属性
         List<Resource> resources = resourceService.getAll();
+        Session session =  sessionFactory.openSession();
         for (Resource resource : resources) {
             if (StringUtils.isEmpty(resource.getSource())) {
                 continue;
             }
+
+            session.update(resource);
 
             for (Authority authority : resource.getAuthorities()) {
                 // 如果资源的值为分号分隔，则循环构造元数据。分号分隔好处是对一批相同权限的资源，不需要逐个定义
@@ -55,6 +63,8 @@ public class ShiroDefinitionSectionMetaSource implements FactoryBean<Ini.Section
                 }
             }
         }
+        session.close();
+
         section.put("/**", "user");
         return section;
     }
