@@ -7,23 +7,7 @@
   <title>菜单管理</title>
   <%@ include file="/common/js.jsp" %>
 
-  <style type="text/css">
-    .ftitle {
-      font-size: 14px;
-      font-weight: bold;
-      color: #666;
-      padding: 5px 0;
-      margin-bottom: 10px;
-      border-bottom: 1px solid #ccc;
-    }
-    .fitem {
-      margin-bottom: 5px;
-    }
-    .fitem label {
-      display: inline-block;
-      width: 80px;
-    }
-  </style>
+  <link rel="stylesheet" type="text/css" href="${ctx}/statics/css/common.css" />
 
   <script type="text/javascript">
     var editingMenuId = null;

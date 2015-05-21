@@ -24,7 +24,7 @@ public class UserController {
 
     @RequestMapping
     public String manager() {
-        return "security/userList";
+        return "security/userManager";
     }
 
     @ResponseBody

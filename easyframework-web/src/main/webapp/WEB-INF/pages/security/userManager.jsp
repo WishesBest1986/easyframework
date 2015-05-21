@@ -7,6 +7,8 @@
   <title>用户管理</title>
   <%@ include file="/common/js.jsp" %>
 
+  <link rel="stylesheet" type="text/css" href="${ctx}/statics/css/common.css" />
+
   <script type="text/javascript">
     $(function() {
       initSearchForm();
