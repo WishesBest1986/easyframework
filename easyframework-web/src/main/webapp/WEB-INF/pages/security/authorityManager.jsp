@@ -144,6 +144,9 @@
         },
         onHidePanel: function() {
           comboTreeFilterAllCondition();
+        },
+        onLoadSuccess: function(node, data) {
+          comboTreeFilterAllCondition();
         }
       });
     }
