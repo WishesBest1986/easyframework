@@ -113,6 +113,9 @@
     }
 
     function initModifyForm() {
+      initOrgComboTree();
+      initRoleComboTree();
+
       $('#modifyForm').form({
         url: '${ctx}/security/user/doModify',
         onSubmit: function() {
@@ -133,7 +136,50 @@
       });
     }
 
+    function initOrgComboTree() {
+      $('#orgId').combotree({
+        url: '${ctx}/security/org/allTree',
+        lines: true
+      });
+    }
+
+    function initRoleComboTree() {
+      $('#roleIds').combotree({
+        url: '${ctx}/security/role/allTree',
+        lines: true,
+        multiple: true,
+        cascadeCheck: true,
+        onChange: function(newValue, oldValue) {
+          comboTreeFilterAllCondition();
+        },
+        onShowPanel: function() {
+          comboTreeFilterAllCondition();
+        },
+        onHidePanel: function() {
+          comboTreeFilterAllCondition();
+        }
+      });
+    }
+
+    function comboTreeFilterAllCondition() {
+      var nodes = $('#roleIds').combotree('tree').tree('getChecked');
+      for (var i = 0; i < nodes.length; i ++) {
+        var node = nodes[i];
+        if (!node.id) {
+          $('#roleIds ~ .combo .textbox-text').val('全选');
+          break;
+        }
+      }
+    }
+
     function newUser() {
+      $('#password').textbox({
+        required: true
+      });
+      $('#rePassword').textbox({
+        required: true
+      });
+
       $('#dlg').dialog('open').dialog('setTitle', '新建用户');
       $('#modifyForm').form('clear');
     }
@@ -141,7 +187,15 @@
     function editUser() {
       var row = $('#dataGrid').datagrid('getSelected');
       if (row) {
+        $('#password').textbox({
+          required: false
+        });
+        $('#rePassword').textbox({
+          required: false
+        });
         $('#dlg').dialog('open').dialog('setTitle', '编辑用户');
+        row.password = '';
+
         $('#modifyForm').form('clear');
         $('#modifyForm').form('load', row);
       } else {
@@ -172,6 +226,20 @@
         $.messager.alert('提示', '请先选择待删除的用户!', 'info');
       }
     }
+
+    function saveUser() {
+      $('#modifyForm').submit();
+    }
+
+    <!-- 拓展easyUI的验证框架，验证两次输入值一致 -->
+    $.extend($.fn.validatebox.defaults.rules, {
+      equalTo: {
+        validator: function(value, param) {
+          return $(param[0]).val() == value;
+        },
+        message: '字段内容不配置'
+      }
+    });
   </script>
 
 </head>
@@ -197,5 +265,43 @@
 <div data-options="region:'center', border:false, title:'用户管理'" style="overflow-y: auto;">
   <table id="dataGrid" data-options="fit:true, border:false"></table>
 </div>
+
+<div id="dlg" class="easyui-dialog" data-option="region:'center', modal:true" style="width: 400px;padding: 10px 20px;" closed="true" buttons="#dlg-buttons">
+  <div class="ftitle">用户信息</div>
+  <form id="modifyForm" method="post" novalidate>
+    <input type="hidden" name="id" />
+    <div class="fitem">
+      <label>登录名：</label>
+      <input name="username" class="easyui-textbox" required="true" />
+    </div>
+    <div class="fitem">
+      <label>姓名：</label>
+      <input name="fullname" class="easyui-textbox" />
+    </div>
+    <div class="fitem">
+      <label>密码：</label>
+      <input id="password" name="password" type="password" class="easyui-textbox" />
+    </div>
+    <div class="fitem">
+      <label>密码确认：</label>
+      <input id="rePassword" name="rePassword" type="password" class="easyui-textbox" validType="equalTo['#password']" />
+    </div>
+    <div class="fitem">
+      <label>所属部门：</label>
+      <select id="orgId" name="orgId" style="width: 150px;"></select>
+      <a class="easyui-linkbutton" href="javascript:void(0)" onclick="$('#orgId').combotree('clear');">清空</a>
+    </div>
+    <div class="fitem">
+      <label>角色列表：</label>
+      <select id="roleIds" name="roleIds" style="width: 150px;"></select>
+      <a class="easyui-linkbutton" href="javascript:void(0)" onclick="$('#roleIds').combotree('clear');">清空</a>
+    </div>
+  </form>
+</div>
+<div id="dlg-buttons">
+  <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveUser()" style="width: 90px;">保存</a>
+  <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')" style="width: 90px;">取消</a>
+</div>
+
 </body>
 </html>
