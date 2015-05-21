@@ -64,5 +64,14 @@
             <version>${jackson.version}</version>
         </dependency>
         <!-- Json end -->
+
+        <!-- Web begin -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- Web end -->
     </dependencies>
 </project>

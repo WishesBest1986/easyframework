@@ -91,8 +91,7 @@
           var isValid = $(this).form('validate');
           return isValid;
         },
-        success: function(result) {
-          result = $.parseJSON(result);
+        successHandler: function(result) {
           if (result.success) {
             $('#editPwdDialog').dialog('close');
             $.messager.alert('提示', '密码修改成功，请重新登录!', 'info', function() {

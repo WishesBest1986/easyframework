@@ -1,3 +1,4 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ include file="/common/taglibs.jsp" %>
 
 <!-- jQuery -->
@@ -11,3 +12,40 @@
 <link rel="stylesheet" type="text/css" href="${ctx}/statics/jslib/jquery-easyui-1.4.2/themes/icon.css" />
 <script type="text/javascript" src="${ctx}/statics/jslib/jquery-easyui-1.4.2/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="${ctx}/statics/jslib/jquery-easyui-1.4.2/locale/easyui-lang-zh_CN.js"></script>
+
+<script type="text/javascript">
+    $.ajaxSetup({
+        cache: false,
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            if (XMLHttpRequest.status == 401) {
+                $.messager.alert({
+                    title: '错误',
+                    msg: '您没有足够的权限执行该操作!'
+                });
+            }
+        }
+    });
+
+    $.extend($.fn.form.defaults, {
+        queryParams: {ajax : 'true'},
+        success: function(data) {
+            if (data.search(/HTTP Status 401/) != -1) {
+                $.messager.alert({
+                    title: '错误',
+                    msg: '您没有足够的权限执行该操作!'
+                });
+            } else {
+                try {
+                    data = $.parseJSON(data);
+
+                    this.successHandler(data);
+                } catch(e) {
+                    $.messager.show({
+                        title: '错误',
+                        msg: '服务器返回数据解析错误'
+                    });
+                }
+            }
+        }
+    });
+</script>

@@ -14,9 +14,7 @@
           var isValid = $(this).form('validate');
           return isValid;
         },
-        success: function(result) {
-          result = $.parseJSON(result);
-
+        successHandler: function(result) {
           if (result.success) {
             window.location.href = '${ctx}/index';
           } else {
