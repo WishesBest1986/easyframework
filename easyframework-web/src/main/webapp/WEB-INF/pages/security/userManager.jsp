@@ -13,6 +13,7 @@
     $(function() {
       initSearchForm();
       initDataGrid();
+      initModifyForm();
     });
 
     function initSearchForm() {
@@ -111,14 +112,38 @@
       });
     }
 
-    function newUser() {
+    function initModifyForm() {
+      $('#modifyForm').form({
+        url: '${ctx}/security/user/doModify',
+        onSubmit: function() {
+          var isValid = $(this).form('validate');
+          return isValid;
+        },
+        successHandler: function(result) {
+          if (result.success) {
+            $('#dlg').dialog('close');
+            $('#dataGrid').datagrid('reload');
+          } else {
+            $.messager.show({
+              title: '错误',
+              msg: result.msg
+            });
+          }
+        }
+      });
+    }
 
+    function newUser() {
+      $('#dlg').dialog('open').dialog('setTitle', '新建用户');
+      $('#modifyForm').form('clear');
     }
 
     function editUser() {
       var row = $('#dataGrid').datagrid('getSelected');
       if (row) {
-
+        $('#dlg').dialog('open').dialog('setTitle', '编辑用户');
+        $('#modifyForm').form('clear');
+        $('#modifyForm').form('load', row);
       } else {
         $.messager.alert('提示', '请先选择待编辑的用户!', 'info');
       }
@@ -129,8 +154,8 @@
       if (row) {
         $.messager.confirm('提示', '确认要删除用户', function(ret) {
           if (ret) {
-            var url = '';
-            var data = {};
+            var url = '${ctx}/security/user/doDelete';
+            var data = {id : row.id};
             $.post(url, data, function(result) {
               if (result.success) {
                 $('#dataGrid').datagrid('reload');

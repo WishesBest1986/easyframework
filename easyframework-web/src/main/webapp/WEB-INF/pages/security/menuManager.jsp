@@ -223,7 +223,6 @@
             var data = {id : row.id};
             $.post(url, data, function(result) {
               if (result.success) {
-                $('#dlg').dialog('close');
                 $('#dataGrid').datagrid('reload');
                 $('#parentMenuId').combotree('reload');
               } else {
