@@ -13,6 +13,7 @@
 <script type="text/javascript" src="${ctx}/statics/jslib/jquery-easyui-1.4.2/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="${ctx}/statics/jslib/jquery-easyui-1.4.2/locale/easyui-lang-zh_CN.js"></script>
 
+<!-- common javascript code -->
 <script type="text/javascript">
     $.ajaxSetup({
         cache: false,
