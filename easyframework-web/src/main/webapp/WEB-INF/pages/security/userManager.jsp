@@ -177,7 +177,8 @@
 
     function newUser() {
       $('#password').textbox({
-        required: true
+        required: true,
+        onChange: function(newValue, oldValue) { }
       });
       $('#rePassword').textbox({
         required: true
@@ -191,7 +192,18 @@
       var row = $('#dataGrid').datagrid('getSelected');
       if (row) {
         $('#password').textbox({
-          required: false
+          required: false,
+          onChange: function(newValue, oldValue) {
+            if (newValue) {
+              $('#rePassword').textbox({
+                required: true
+              });
+            } else {
+              $('#rePassword').textbox({
+                required: false
+              });
+            }
+          }
         });
         $('#rePassword').textbox({
           required: false
