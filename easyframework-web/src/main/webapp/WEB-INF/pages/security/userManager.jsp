@@ -166,7 +166,7 @@
       for (var i = 0; i < nodes.length; i ++) {
         var node = nodes[i];
         if (!node.id) {
-          $('#roleIds ~ .combo .textbox-text').val('全选');
+          $('#roleIds').combotree('setText', '全选');
           break;
         }
       }

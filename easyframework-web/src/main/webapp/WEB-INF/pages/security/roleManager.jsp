@@ -153,7 +153,7 @@
       for (var i = 0; i < nodes.length; i ++) {
         var node = nodes[i];
         if (!node.id) {
-          $('#authorityIds ~ .combo .textbox-text').val('全选');
+          $('#authorityIds').combotree('setText', '全选');
           break;
         }
       }
