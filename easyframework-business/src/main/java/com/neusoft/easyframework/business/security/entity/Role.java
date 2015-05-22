@@ -19,7 +19,6 @@ public class Role extends SecurityEntity {
     @JsonBackReference
     private List<User> users = new ArrayList<User>();
 
-    @JsonBackReference
     private List<Authority> authorities = new ArrayList<Authority>();
 
     public Role() {
