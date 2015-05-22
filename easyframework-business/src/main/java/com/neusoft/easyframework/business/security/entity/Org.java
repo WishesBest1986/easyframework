@@ -27,6 +27,7 @@ public class Org extends SecurityEntity {
     @JsonBackReference
     private List<Org> orgs = new ArrayList<Org>();
 
+    @JsonBackReference
     private List<User> users = new ArrayList<User>();
 
     public Org() {

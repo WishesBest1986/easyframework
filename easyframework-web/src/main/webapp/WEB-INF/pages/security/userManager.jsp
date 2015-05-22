@@ -39,6 +39,7 @@
         url: '${ctx}/security/user/list',
         pagination: true,
         fit: true,
+        singleSelect: true,
         rownumbers: true,
         idField: 'id',
         frozenColumns: [[
@@ -176,7 +177,7 @@
     }
 
     function newUser() {
-      $('#password').textbox({
+      $('#plainPassword').textbox({
         required: true,
         onChange: function(newValue, oldValue) { }
       });
@@ -191,7 +192,7 @@
     function editUser() {
       var row = $('#dataGrid').datagrid('getSelected');
       if (row) {
-        $('#password').textbox({
+        $('#plainPassword').textbox({
           required: false,
           onChange: function(newValue, oldValue) {
             if (newValue) {
@@ -209,8 +210,17 @@
           required: false
         });
         $('#dlg').dialog('open').dialog('setTitle', '编辑用户');
-        row.password = '';
-
+        if (row.org) {
+          row.orgId = row.org.id;
+        }
+        if (row.roles) {
+          var roleIds = new Array();
+          for (var i = 0; i < row.roles.length; i ++) {
+            var role = row.roles[i];
+            roleIds.push(role.id);
+          }
+          row.roleIds = roleIds;
+        }
         $('#modifyForm').form('clear');
         $('#modifyForm').form('load', row);
       } else {
@@ -295,11 +305,15 @@
     </div>
     <div class="fitem">
       <label>密码：</label>
-      <input id="password" name="password" type="password" class="easyui-textbox" />
+      <input id="plainPassword" name="plainPassword" type="password" class="easyui-textbox" />
     </div>
     <div class="fitem">
       <label>密码确认：</label>
-      <input id="rePassword" name="rePassword" type="password" class="easyui-textbox" validType="equalTo['#password']" />
+      <input id="rePassword" name="rePassword" type="password" class="easyui-textbox" validType="equalTo['#plainPassword']" />
+    </div>
+    <div class="fitem">
+      <label>是否可用：</label>
+      <input name="enabled" value="true" type="checkbox" />
     </div>
     <div class="fitem">
       <label>所属部门：</label>
