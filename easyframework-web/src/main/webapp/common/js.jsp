@@ -50,4 +50,16 @@
         },
         successHandler: function(result) {}
     });
+
+    $.extend($.fn.datagrid.defaults, {
+        queryParams: {ajax: 'true'},
+        onLoadError: function(XMLHttpRequest, textStatus, errorThrown) {
+            if (XMLHttpRequest.status == 401) {
+                $.messager.alert({
+                    title: '错误',
+                    msg: '您没有足够的权限执行该操作!'
+                });
+            }
+        }
+    });
 </script>
