@@ -3,11 +3,13 @@ package com.neusoft.easyframework.web.controller.security;
 import com.neusoft.easyframework.business.security.entity.Menu;
 import com.neusoft.easyframework.business.security.entity.Resource;
 import com.neusoft.easyframework.business.security.service.ResourceService;
+import com.neusoft.easyframework.business.security.shiro.ShiroDefinitionSectionMetaSourceService;
 import com.neusoft.easyframework.core.orm.Page;
 import com.neusoft.easyframework.core.orm.PropertyFilter;
 import com.neusoft.easyframework.web.entity.EasyUITreeModel;
 import com.neusoft.easyframework.web.entity.GridModel;
 import com.neusoft.easyframework.web.entity.JsonModel;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +29,9 @@ import java.util.Set;
 public class ResourceController {
     @Autowired
     private ResourceService resourceService;
+
+    @Autowired
+    private ShiroDefinitionSectionMetaSourceService definitionSectionMetaSourceService;
 
     @RequestMapping
     public String manager() {
@@ -58,7 +63,25 @@ public class ResourceController {
         }
 
         try {
-            resourceService.save(resource);
+            boolean needRefreshPermissionMetaSource = false;
+            Resource editResource = null;
+            if (resource.getId() != null) {
+                editResource = resourceService.get(resource.getId()); // 防止编辑丢失其他关联信息
+                needRefreshPermissionMetaSource = (editResource.getSource() != null && !editResource.getSource().equals(resource.getSource())) ||
+                        (editResource.getSource() == null && resource.getSource() != null);
+
+                editResource.setName(resource.getName());
+                editResource.setSource(resource.getSource());
+                editResource.setMenu(resource.getMenu());
+            } else {
+                editResource = resource;
+                needRefreshPermissionMetaSource = StringUtils.isNotBlank(editResource.getSource());
+            }
+
+            resourceService.save(editResource);
+            if (needRefreshPermissionMetaSource) {
+                definitionSectionMetaSourceService.updatePermission();
+            }
             jsonModel.setSuccess(true);
         } catch (Exception e) {
             jsonModel.setMsg(e.getMessage());
@@ -73,7 +96,16 @@ public class ResourceController {
         JsonModel jsonModel = new JsonModel();
 
         try {
+            Resource resource = resourceService.get(id);
+            boolean needRefreshPermissionMetaSource = StringUtils.isNotBlank(resource.getSource());
+
             resourceService.delete(id);
+
+            // 删除资源后，需要动态更新授权元数据信息
+            if (needRefreshPermissionMetaSource) {
+                definitionSectionMetaSourceService.updatePermission();
+            }
+
             jsonModel.setSuccess(true);
         } catch (Exception e) {
             jsonModel.setMsg(e.getMessage());

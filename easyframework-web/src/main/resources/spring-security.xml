@@ -23,11 +23,9 @@
                             <entry key="perms" value-ref="permissionsAuthorizationFilter" />
                      </util:map>
               </property>
-
-              <property name="filterChainDefinitionMap" ref="definitionMetaSource" />
        </bean>
 
-       <bean id="definitionMetaSource" class="com.neusoft.easyframework.business.security.shiro.ShiroDefinitionSectionMetaSource">
+       <bean id="definitionMetaSourceService" class="com.neusoft.easyframework.business.security.shiro.ShiroDefinitionSectionMetaSourceService">
               <property name="filterChainDefinitions">
                      <value>
                             /login = anon
@@ -39,7 +37,7 @@
                      </value>
               </property>
        </bean>
-       
+
        <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
               <property name="realm" ref="dbRealm" />
        </bean>

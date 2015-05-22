@@ -3,6 +3,7 @@ package com.neusoft.easyframework.web.controller.security;
 import com.neusoft.easyframework.business.security.entity.Authority;
 import com.neusoft.easyframework.business.security.entity.Resource;
 import com.neusoft.easyframework.business.security.service.AuthorityService;
+import com.neusoft.easyframework.business.security.shiro.ShiroDefinitionSectionMetaSourceService;
 import com.neusoft.easyframework.core.orm.Page;
 import com.neusoft.easyframework.core.orm.PropertyFilter;
 import com.neusoft.easyframework.web.entity.EasyUITreeModel;
@@ -10,6 +11,7 @@ import com.neusoft.easyframework.web.entity.GridModel;
 import com.neusoft.easyframework.web.entity.JsonModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -25,6 +27,9 @@ import java.util.List;
 public class AuthorityController {
     @Autowired
     private AuthorityService authorityService;
+
+    @Autowired
+    private ShiroDefinitionSectionMetaSourceService definitionSectionMetaSourceService;
 
     @RequestMapping
     public String manager() {
@@ -60,18 +65,28 @@ public class AuthorityController {
         }
 
         try {
+            boolean needRefreshPermissionMetaSource = false;
+
             Authority editAuthority = null;
             if (authority.getId() != null) {
                 editAuthority = authorityService.get(authority.getId()); // 防止编辑丢失其他关联信息
+                needRefreshPermissionMetaSource = true; // 修改时，简化为需要更新授权元数据
 
                 editAuthority.setName(authority.getName());
                 editAuthority.setDescription(authority.getDescription());
                 editAuthority.setResources(authority.getResources());
             } else {
                 editAuthority = authority;
+                needRefreshPermissionMetaSource = !CollectionUtils.isEmpty(editAuthority.getResources());
             }
 
             authorityService.save(editAuthority);
+
+            // 修改权限后，需要动态更新授权元数据信息
+            if (needRefreshPermissionMetaSource) {
+                definitionSectionMetaSourceService.updatePermission();
+            }
+
             jsonModel.setSuccess(true);
         } catch (Exception e) {
             jsonModel.setMsg(e.getMessage());
@@ -86,7 +101,16 @@ public class AuthorityController {
         JsonModel jsonModel = new JsonModel();
 
         try {
+            Authority authority = authorityService.get(id);
+            boolean needRefreshPermissionMetaSource = !CollectionUtils.isEmpty(authority.getResources());
+
             authorityService.delete(id);
+
+            // 修改权限后，需要动态更新授权元数据信息
+            if (needRefreshPermissionMetaSource) {
+                definitionSectionMetaSourceService.updatePermission();
+            }
+
             jsonModel.setSuccess(true);
         } catch (Exception e) {
             jsonModel.setMsg(e.getMessage());
