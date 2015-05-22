@@ -104,8 +104,13 @@ public class UserController {
         JsonModel jsonModel = new JsonModel();
 
         try {
-            userService.delete(id);
-            jsonModel.setSuccess(true);
+            User user = userService.get(id);
+            if (user.isReserved()) {
+                jsonModel.setMsg("保留用户不允许删除");
+            } else {
+                userService.delete(id);
+                jsonModel.setSuccess(true);
+            }
         } catch (Exception e) {
             jsonModel.setMsg(e.getMessage());
         }

@@ -62,6 +62,12 @@
             field: 'enabled',
             sortable: true,
             width: 200
+          },
+          {
+            title: '是否保留用户',
+            field: 'reserved',
+            sortable: true,
+            width: 200
           }
         ]],
         toolbar: [

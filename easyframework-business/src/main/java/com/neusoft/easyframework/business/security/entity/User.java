@@ -24,6 +24,8 @@ public class User extends SecurityEntity {
 
     private boolean enabled;
 
+    private boolean reserved;
+
     private Org org;
 
     private List<Role> roles = new ArrayList<Role>();
@@ -59,6 +61,15 @@ public class User extends SecurityEntity {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    @Column(name = "reserved")
+    public boolean isReserved() {
+        return reserved;
+    }
+
+    public void setReserved(boolean reserved) {
+        this.reserved = reserved;
     }
 
     @Transient
