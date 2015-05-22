@@ -94,14 +94,29 @@ public class UserService {
 //                "LEFT OUTER JOIN sec_role_authority ra ON r.id = ra.role_id " +
 //                "LEFT OUTER JOIN sec_authority a ON ra.authority_id = a.id " +
 //                "WHERE u.id = ?";
-        String sql = "SELECT a.name FROM sec_authority a " +
-                "JOIN sec_role_authority ra ON a.id = ra.authority_id " +
-                "JOIN sec_role r ON ra.role_id = r.id " +
-                "JOIN sec_user_role ur ON r.id = ur.role_id " +
-                "JOIN sec_user u ON ur.user_id = u.id " +
-                "WHERE u.id = ?";
-        SQLQuery query = userDao.createSQLQuery(sql, userId);
-        return query.list();
+        SQLQuery query = null;
+
+        User user = userDao.findUniqueBy("id", userId);
+
+        // 对于保留用户，拥有所有权限
+        if (user != null && user.isReserved()) {
+            String sql = "SELECT name FROM sec_authority";
+            query = userDao.createSQLQuery(sql);
+        } else {
+            String sql = "SELECT a.name FROM sec_authority a " +
+                    "JOIN sec_role_authority ra ON a.id = ra.authority_id " +
+                    "JOIN sec_role r ON ra.role_id = r.id " +
+                    "JOIN sec_user_role ur ON r.id = ur.role_id " +
+                    "JOIN sec_user u ON ur.user_id = u.id " +
+                    "WHERE u.id = ?";
+            query = userDao.createSQLQuery(sql, userId);
+        }
+
+        List<String> result = null;
+        if (query != null) {
+            result = query.list();
+        }
+        return result;
     }
 
     /**
