@@ -137,7 +137,7 @@
       var zSetting = {
         callback: {
           onClick: function(event, treeId, treeNode, clickFlag) {
-            var href = treeNode.href;
+            var href = treeNode.href ? ('${ctx}/' + treeNode.href) : '';
             var title = treeNode.name;
             var params = {
               url: href,
