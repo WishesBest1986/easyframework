@@ -34,6 +34,7 @@
     $(function() {
       initNaviTabBar();
       initEditPwdForm();
+      initMenuAccordion();
     });
 
     function initNaviTabBar() {
@@ -108,6 +109,47 @@
       });
     }
 
+    function initMenuAccordion() {
+      var url = '${ctx}/security/menu/allowedAccessMenuTree';
+      var data = {};
+      $.post(url, data, function(result) {
+        var accordions = result;
+        $.each(accordions, function(i, accordion) {
+          var treeDomId = 'menu' + accordion.id;
+          var title = accordion.title;
+          var zTreeDom = '<ul class="ztree" id="' + treeDomId + '"></ul>';
+          $('#menuAccordion').accordion('add', {
+            title: title,
+            content: zTreeDom
+          });
+
+          var zNodes = accordion.treeModels;
+          initMenuAccordionItemZTree($('#' + treeDomId), zNodes);
+        });
+
+        if (accordions) {
+          $('#menuAccordion').accordion('select', 0);
+        }
+      }, 'json');
+    }
+
+    function initMenuAccordionItemZTree(zTreeObj, zNodes) {
+      var zSetting = {
+        callback: {
+          onClick: function(event, treeId, treeNode, clickFlag) {
+            var href = treeNode.href;
+            var title = treeNode.name;
+            var params = {
+              url: href,
+              title: title
+            };
+            addTab($('#tabs'), params);
+          }
+        }
+      };
+      $.fn.zTree.init(zTreeObj, zSetting, zNodes);
+    }
+
     function editPwd() {
       $('#editPwdDialog').dialog('open').dialog('setTitle', '修改密码');
       $('#editPwdForm').form('clear');
@@ -157,15 +199,15 @@
 
 <!-- 右侧菜单 -->
 <div data-options="region:'west', iconCls:'icon-reload', split:true" title="功能菜单" style="width: 15%;padding: 1px;overflow: auto;height: auto;">
-  <div class="easyui-accordion" data-options="fit:true, border:false">
-    <div title="系统管理" style="padding: 10px;overflow: auto;">
-      <p align="left"><a href="javascript:void(0);" src="${ctx}/security/user" class="cs-navi-tab">用户管理</a></p>
-      <p align="left"><a href="javascript:void(0);" src="${ctx}/security/org" class="cs-navi-tab">部门管理</a></p>
-      <p align="left"><a href="javascript:void(0);" src="${ctx}/security/role" class="cs-navi-tab">角色管理</a></p>
-      <p align="left"><a href="javascript:void(0);" src="${ctx}/security/authority" class="cs-navi-tab">权限管理</a></p>
-      <p align="left"><a href="javascript:void(0);" src="${ctx}/security/resource" class="cs-navi-tab">资源管理</a></p>
-      <p align="left"><a href="javascript:void(0);" src="${ctx}/security/menu" class="cs-navi-tab">菜单管理</a></p>
-    </div>
+  <div id="menuAccordion" class="easyui-accordion" data-options="fit:true, border:false, animate:false">
+    <%--<div title="系统管理" style="padding: 10px;overflow: auto;">--%>
+      <%--<p align="left"><a href="javascript:void(0);" src="${ctx}/security/user" class="cs-navi-tab">用户管理</a></p>--%>
+      <%--<p align="left"><a href="javascript:void(0);" src="${ctx}/security/org" class="cs-navi-tab">部门管理</a></p>--%>
+      <%--<p align="left"><a href="javascript:void(0);" src="${ctx}/security/role" class="cs-navi-tab">角色管理</a></p>--%>
+      <%--<p align="left"><a href="javascript:void(0);" src="${ctx}/security/authority" class="cs-navi-tab">权限管理</a></p>--%>
+      <%--<p align="left"><a href="javascript:void(0);" src="${ctx}/security/resource" class="cs-navi-tab">资源管理</a></p>--%>
+      <%--<p align="left"><a href="javascript:void(0);" src="${ctx}/security/menu" class="cs-navi-tab">菜单管理</a></p>--%>
+    <%--</div>--%>
   </div>
 </div>
 

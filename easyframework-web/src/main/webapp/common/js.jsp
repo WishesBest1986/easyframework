@@ -13,6 +13,10 @@
 <script type="text/javascript" src="${ctx}/statics/jslib/jquery-easyui-1.4.2/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="${ctx}/statics/jslib/jquery-easyui-1.4.2/locale/easyui-lang-zh_CN.js"></script>
 
+<!-- zTree -->
+<link rel="stylesheet" type="text/css" href="${ctx}/statics/jslib/zTree_v3/css/zTreeStyle/zTreeStyle.css" />
+<script type="text/javascript" src="${ctx}/statics/jslib/zTree_v3/js/jquery.ztree.all-3.5.js"></script>
+
 <!-- common javascript code -->
 <script type="text/javascript">
     $.ajaxSetup({

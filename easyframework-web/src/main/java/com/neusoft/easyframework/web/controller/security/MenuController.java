@@ -2,15 +2,15 @@ package com.neusoft.easyframework.web.controller.security;
 
 import com.neusoft.easyframework.business.security.entity.Menu;
 import com.neusoft.easyframework.business.security.service.MenuService;
+import com.neusoft.easyframework.business.security.shiro.ShiroUtils;
 import com.neusoft.easyframework.core.orm.Page;
 import com.neusoft.easyframework.core.orm.PropertyFilter;
-import com.neusoft.easyframework.web.entity.EasyUITreeModel;
-import com.neusoft.easyframework.web.entity.GridModel;
-import com.neusoft.easyframework.web.entity.JsonModel;
+import com.neusoft.easyframework.web.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import sun.jvm.hotspot.opto.MachNode;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -121,5 +121,37 @@ public class MenuController {
             }
             treeModel.getChildren().add(subModel);
         }
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "allowedAccessMenuTree")
+    public List<AccordionModel> getAllowedAccessMenu() {
+        Long currentUserId = ShiroUtils.getUserId();
+        List<Menu> menus = menuService.getAllowedAccessMenu(currentUserId);
+
+        List<AccordionModel> accordionModels = new ArrayList<AccordionModel>();
+        for (Menu menu : menus) {
+            if (menu.getParentMenu() == null) {
+                AccordionModel accordionModel = new AccordionModel();
+                accordionModel.setId(menu.getId().toString());
+                accordionModel.setTitle(menu.getName());
+
+                List<ZTreeModel> treeModels = new ArrayList<ZTreeModel>();
+                List<Menu> subMenus = menu.getSubMenus();
+                for (Menu subMenu : subMenus) {
+                    ZTreeModel treeModel = new ZTreeModel();
+                    treeModel.setId(subMenu.getId());
+                    treeModel.setName(subMenu.getName());
+                    treeModel.setHref(subMenu.getDescription());
+
+                    treeModels.add(treeModel);
+                }
+                accordionModel.setTreeModels(treeModels);
+
+                accordionModels.add(accordionModel);
+            }
+        }
+
+        return accordionModels;
     }
 }

@@ -67,8 +67,8 @@ public class MenuService {
         sqlBuffer.append("UNION ALL ");
         // 获取sec_resource表中已关联且设置权限，并根据当前登录帐号拥有的权限的菜单列表
         sqlBuffer.append("SELECT m.id, m.name, m.parent_menu, re.source as description, m.ordernum FROM sec_user u ");
-        sqlBuffer.append("LEFT OUTER JOIN sec_role_user ru ON u.id = ru.user_id ");
-        sqlBuffer.append("LEFT OUTER JOIN sec_role r ON ru.role_id = r.id ");
+        sqlBuffer.append("LEFT OUTER JOIN sec_user_role ur ON u.id = ur.user_id ");
+        sqlBuffer.append("LEFT OUTER JOIN sec_role r ON ur.role_id = r.id ");
         sqlBuffer.append("LEFT OUTER JOIN sec_role_authority ra ON r.id = ra.role_id ");
         sqlBuffer.append("LEFT OUTER JOIN sec_authority a ON ra.authority_id = a.id ");
         sqlBuffer.append("LEFT OUTER JOIN sec_authority_resource ar ON a.id = ar.authority_id ");
