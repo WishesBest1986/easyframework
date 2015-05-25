@@ -34,7 +34,7 @@ public class ResourceService {
     public void delete(Long id) {
         List<Menu> menus = menuDao.getAll();
         for (Menu menu : menus) {
-            if (menu.getResource().getId().longValue() == id.longValue()) {
+            if (menu.getResource() != null && menu.getResource().getId().longValue() == id.longValue()) {
                 menu.setResource(null);
                 menuDao.save(menu);
             }
