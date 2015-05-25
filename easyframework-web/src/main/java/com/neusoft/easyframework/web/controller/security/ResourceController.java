@@ -1,6 +1,5 @@
 package com.neusoft.easyframework.web.controller.security;
 
-import com.neusoft.easyframework.business.security.entity.Menu;
 import com.neusoft.easyframework.business.security.entity.Resource;
 import com.neusoft.easyframework.business.security.service.ResourceService;
 import com.neusoft.easyframework.business.security.shiro.ShiroDefinitionSectionMetaSourceService;
@@ -17,9 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by neusoft on 15-5-19.
