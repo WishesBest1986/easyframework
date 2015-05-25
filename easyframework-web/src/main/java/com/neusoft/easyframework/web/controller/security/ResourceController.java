@@ -54,13 +54,8 @@ public class ResourceController {
 
     @ResponseBody
     @RequestMapping(value = "doModify")
-    public JsonModel doModify(Resource resource, Long menuId) {
+    public JsonModel doModify(Resource resource) {
         JsonModel jsonModel = new JsonModel();
-
-        if (menuId != null && menuId.longValue() > 0) {
-            Menu menu = new Menu(menuId);
-            resource.setMenu(menu);
-        }
 
         try {
             boolean needRefreshPermissionMetaSource = false;
@@ -72,7 +67,6 @@ public class ResourceController {
 
                 editResource.setName(resource.getName());
                 editResource.setSource(resource.getSource());
-                editResource.setMenu(resource.getMenu());
             } else {
                 editResource = resource;
                 needRefreshPermissionMetaSource = StringUtils.isNotBlank(editResource.getSource());

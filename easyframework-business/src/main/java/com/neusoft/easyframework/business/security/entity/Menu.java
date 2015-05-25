@@ -22,6 +22,8 @@ public class Menu extends SecurityEntity {
 
     private Menu parentMenu;
 
+    private Resource resource;
+
     @JsonBackReference
     private List<Menu> subMenus = new ArrayList<Menu>();
 
@@ -75,6 +77,16 @@ public class Menu extends SecurityEntity {
 
     public void setParentMenu(Menu parentMenu) {
         this.parentMenu = parentMenu;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "resource", nullable = true)
+    public Resource getResource() {
+        return resource;
+    }
+
+    public void setResource(Resource resource) {
+        this.resource = resource;
     }
 
     @OneToMany(cascade = CascadeType.ALL)

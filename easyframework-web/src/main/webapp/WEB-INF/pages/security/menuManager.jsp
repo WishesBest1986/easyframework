@@ -73,6 +73,19 @@
             }
           },
           {
+            title: '对应资源',
+            field: 'resource',
+            sortable: true,
+            width: 200,
+            formatter: function(value, row, index) {
+              if (value) {
+                return value.name;
+              } else {
+               return value;
+              }
+            }
+          },
+          {
             title: '排序号',
             field: 'orderNum',
             width: 150
@@ -128,6 +141,7 @@
     }
 
     function initModifyForm() {
+      initResourceComboTree();
       initParentMenuComboTree();
 
       $('#modifyForm').form({
@@ -148,6 +162,13 @@
             });
           }
         }
+      });
+    }
+
+    function initResourceComboTree() {
+      $('#resourceId').combotree({
+        url: '${ctx}/security/resource/allTree',
+        lines: true
       });
     }
 
@@ -195,6 +216,7 @@
 
     function newMenu() {
       editingMenuId = null;
+      $('#resourceId').combotree('reload');
       $('#dlg').dialog('open').dialog('setTitle', '新建菜单');
       $('#modifyForm').form('clear');
     }
@@ -203,7 +225,11 @@
       var row = $('#dataGrid').datagrid('getSelected');
       if (row) {
         editingMenuId = row.id;
+        $('#resourceId').combotree('reload');
         $('#dlg').dialog('open').dialog('setTitle', '编辑菜单');
+        if (row.resource) {
+          row.resourceId = row.resource.id;
+        }
         if (row.parentMenu) {
           row.parentMenuId = row.parentMenu.id;
         }
@@ -279,6 +305,11 @@
     <div class="fitem">
       <label>菜单描述：</label>
       <input name="description" class="easyui-textbox" />
+    </div>
+    <div class="fitem">
+      <label>对应资源：</label>
+      <select id="resourceId" name="resourceId" style="width: 150px;"></select>
+      <a class="easyui-linkbutton" href="javascript:void(0)" onclick="$('#resourceId').combotree('clear');">清空</a>
     </div>
     <div class="fitem">
       <label>排序号：</label>

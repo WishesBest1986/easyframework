@@ -1,6 +1,7 @@
 package com.neusoft.easyframework.business.security.service;
 
 import com.neusoft.easyframework.business.security.dao.UserDao;
+import com.neusoft.easyframework.business.security.entity.Menu;
 import com.neusoft.easyframework.business.security.entity.Org;
 import com.neusoft.easyframework.business.security.entity.User;
 import com.neusoft.easyframework.core.orm.Page;
@@ -137,6 +138,44 @@ public class UserService {
         return query.list();
     }
 
+    /**
+     * 根据用户ID查询该用户允许访问的所有菜单列表
+     */
+    public List<Menu> getAllowedAccessMenu(Long userId) {
+        SQLQuery query = null;
+
+        User user = userDao.findUniqueBy("id", userId);
+
+        // 对于保留用户，拥有所有权限
+        if (user != null && user.isReserved()) {
+            String sql = "SELECT m.id, m.name, m.parent_menu, m.description, m.resource, m.ordernum FROM sec_menu m ORDER BY m.ordernum";
+            query = userDao.createSQLQuery(sql);
+        } else {
+            StringBuffer sqlBuffer = new StringBuffer();
+            // sec_menu表中定义且未关联资源表sec_resource的所有菜单列表 +
+            // sec_resource表中已关联且未设置权限的菜单列表 +
+            // sec_resource表中已关联且设置权限，并根据当前登录帐号拥有的权限的菜单列表
+            sqlBuffer.append("SELECT m.id, m.name, m.parent_menu, m.description, m.resource, m.ordernum FROM sec_menu m ");
+            sqlBuffer.append("LEFT JOIN sec_resource re ON m.resource = re.id ");
+            sqlBuffer.append("LEFT JOIN sec_authority_resource ar ON re.id = ar.resource_id ");
+            sqlBuffer.append("LEFT JOIN sec_authority a ON ar.authority_id = a.id ");
+            sqlBuffer.append("LEFT JOIN sec_role_authority ra ON a.id = ra.authority_id ");
+            sqlBuffer.append("LEFT JOIN sec_role r ON ra.role_id = r.id ");
+            sqlBuffer.append("LEFT JOIN sec_user_role ur ON r.id = ur.role_id ");
+            sqlBuffer.append("LEFT JOIN sec_user u ON ur.user_id = u.id ");
+            sqlBuffer.append("WHERE u.id = ? OR a.id IS NULL ");
+            sqlBuffer.append("ORDER BY m.ordernum");
+            String sql = sqlBuffer.toString();
+            query = userDao.createSQLQuery(sql, userId);
+        }
+
+        List<Menu> result = null;
+        if (query != null) {
+            query.addEntity(Menu.class);
+            result = query.list();
+        }
+        return result;
+    }
 
     /**
      * 设定安全的密码，生成随机的salt并经过1024次sha-1 hash

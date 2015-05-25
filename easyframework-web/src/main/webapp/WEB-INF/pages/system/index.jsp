@@ -72,17 +72,17 @@
         ]
       });
 
-      $('.cs-navi-tab').click(function() {
-        var self = $(this);
-        var href = self.attr('src');
-        var title = self.text();
-
-        var params = {
-          url: href,
-          title: title
-        };
-        addTab(tabsObj, params);
-      });
+//      $('.cs-navi-tab').click(function() {
+//        var self = $(this);
+//        var href = self.attr('src');
+//        var title = self.text();
+//
+//        var params = {
+//          url: href,
+//          title: title
+//        };
+//        addTab(tabsObj, params);
+//      });
     }
 
     function initEditPwdForm() {

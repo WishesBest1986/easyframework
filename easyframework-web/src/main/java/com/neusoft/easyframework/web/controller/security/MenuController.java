@@ -1,11 +1,14 @@
 package com.neusoft.easyframework.web.controller.security;
 
 import com.neusoft.easyframework.business.security.entity.Menu;
+import com.neusoft.easyframework.business.security.entity.Resource;
 import com.neusoft.easyframework.business.security.service.MenuService;
+import com.neusoft.easyframework.business.security.service.UserService;
 import com.neusoft.easyframework.business.security.shiro.ShiroUtils;
 import com.neusoft.easyframework.core.orm.Page;
 import com.neusoft.easyframework.core.orm.PropertyFilter;
 import com.neusoft.easyframework.web.entity.*;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +27,9 @@ import java.util.List;
 public class MenuController {
     @Autowired
     private MenuService menuService;
+
+    @Autowired
+    private UserService userService;
 
     @RequestMapping
     public String manager() {
@@ -46,8 +52,13 @@ public class MenuController {
 
     @ResponseBody
     @RequestMapping(value = "doModify")
-    public JsonModel doModify(Menu menu, Long parentMenuId) {
+    public JsonModel doModify(Menu menu, Long resourceId, Long parentMenuId) {
         JsonModel jsonModel = new JsonModel();
+
+        if (resourceId != null && resourceId.longValue() > 0) {
+            Resource resource = new Resource(resourceId);
+            menu.setResource(resource);
+        }
 
         if (parentMenuId != null && parentMenuId.longValue() > 0) {
             Menu parent = new Menu(parentMenuId);
@@ -62,6 +73,7 @@ public class MenuController {
                 editMenu.setName(menu.getName());
                 editMenu.setDescription(menu.getDescription());
                 editMenu.setOrderNum(menu.getOrderNum());
+                editMenu.setResource(menu.getResource());
                 editMenu.setParentMenu(menu.getParentMenu());
             } else {
                 editMenu = menu;
@@ -127,7 +139,7 @@ public class MenuController {
     @RequestMapping(value = "allowedAccessMenuTree")
     public List<AccordionModel> getAllowedAccessMenu() {
         Long currentUserId = ShiroUtils.getUserId();
-        List<Menu> menus = menuService.getAllowedAccessMenu(currentUserId);
+        List<Menu> menus = userService.getAllowedAccessMenu(currentUserId);
 
         List<AccordionModel> accordionModels = new ArrayList<AccordionModel>();
         for (Menu menu : menus) {
@@ -139,12 +151,14 @@ public class MenuController {
                 List<ZTreeModel> treeModels = new ArrayList<ZTreeModel>();
                 List<Menu> subMenus = menu.getSubMenus();
                 for (Menu subMenu : subMenus) {
-                    ZTreeModel treeModel = new ZTreeModel();
-                    treeModel.setId(subMenu.getId());
-                    treeModel.setName(subMenu.getName());
-                    treeModel.setHref(subMenu.getDescription());
+                    if (menus.contains(subMenu)) {
+                        ZTreeModel treeModel = new ZTreeModel();
+                        treeModel.setId(subMenu.getId());
+                        treeModel.setName(subMenu.getName());
+                        treeModel.setHref(subMenu.getResource() != null ? (StringUtils.isNotBlank(subMenu.getResource().getSource()) ? subMenu.getResource().getSource() : "") : "");
 
-                    treeModels.add(treeModel);
+                        treeModels.add(treeModel);
+                    }
                 }
                 accordionModel.setTreeModels(treeModels);
 

@@ -55,19 +55,6 @@
             field: 'source',
             sortable: true,
             width: 400
-          },
-          {
-            title: '所属菜单',
-            field: 'menu',
-            sortable: true,
-            width: 200,
-            formatter: function(value, row, index) {
-              if (value) {
-                return value.name;
-              } else {
-                return value;
-              }
-            }
           }
         ]],
         toolbar: [
@@ -120,8 +107,6 @@
     }
 
     function initModifyForm() {
-      initMenuComboTree();
-
       $('#modifyForm').form({
         url: '${ctx}/security/resource/doModify',
         onSubmit: function() {
@@ -142,15 +127,7 @@
       });
     }
 
-    function initMenuComboTree() {
-      $('#menuId').combotree({
-        url: '${ctx}/security/menu/allTree',
-        lines: true
-      });
-    }
-
     function newResource() {
-      $('#menuId').combotree('reload');
       $('#dlg').dialog('open').dialog('setTitle', '新建资源');
       $('#modifyForm').form('clear');
     }
@@ -158,11 +135,7 @@
     function editResource() {
       var row = $('#dataGrid').datagrid('getSelected');
       if (row) {
-        $('#menuId').combotree('reload');
         $('#dlg').dialog('open').dialog('setTitle', '编辑资源');
-        if (row.menu) {
-          row.menuId = row.menu.id;
-        }
         $('#modifyForm').form('clear');
         $('#modifyForm').form('load', row);
       } else {
@@ -231,11 +204,6 @@
     <div class="fitem">
       <label>资源值：</label>
       <input name="source" class="easyui-textbox" />
-    </div>
-    <div class="fitem">
-      <label>所属菜单：</label>
-      <select id="menuId" name="menuId" style="width: 150px;"></select>
-      <a class="easyui-linkbutton" href="javascript:void(0)" onclick="$('#menuId').combotree('clear');">清空</a>
     </div>
   </form>
 </div>

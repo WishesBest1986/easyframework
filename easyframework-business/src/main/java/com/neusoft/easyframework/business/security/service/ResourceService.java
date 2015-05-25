@@ -1,8 +1,10 @@
 package com.neusoft.easyframework.business.security.service;
 
 import com.neusoft.easyframework.business.security.dao.AuthorityDao;
+import com.neusoft.easyframework.business.security.dao.MenuDao;
 import com.neusoft.easyframework.business.security.dao.ResourceDao;
 import com.neusoft.easyframework.business.security.entity.Authority;
+import com.neusoft.easyframework.business.security.entity.Menu;
 import com.neusoft.easyframework.business.security.entity.Resource;
 import com.neusoft.easyframework.core.orm.Page;
 import com.neusoft.easyframework.core.orm.PropertyFilter;
@@ -20,13 +22,24 @@ public class ResourceService {
     @Autowired
     private ResourceDao resourceDao;
     @Autowired
+    private MenuDao menuDao;
+    @Autowired
     private AuthorityDao authorityDao;
+
 
     public void save(Resource entity) {
         resourceDao.save(entity);
     }
 
     public void delete(Long id) {
+        List<Menu> menus = menuDao.getAll();
+        for (Menu menu : menus) {
+            if (menu.getResource().getId().longValue() == id.longValue()) {
+                menu.setResource(null);
+                menuDao.save(menu);
+            }
+        }
+
         List<Authority> authorities = authorityDao.getAll();
         for (Authority authority : authorities) {
             for (Resource resource : authority.getResources()) {
