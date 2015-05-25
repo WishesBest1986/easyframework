@@ -107,21 +107,29 @@ public class ResourceController {
 
     @ResponseBody
     @RequestMapping(value = "allTree")
-    public List<EasyUITreeModel> allTree() {
-        List<EasyUITreeModel> treeModelList = new ArrayList<EasyUITreeModel>();
+    public List<EasyUITreeModel> allTree(boolean withAllNode) {
+        List<EasyUITreeModel> treeModelList = null;
 
-        EasyUITreeModel rootTreeModel = new EasyUITreeModel();
-        rootTreeModel.setId("");
-        rootTreeModel.setText("全选");
-        treeModelList.add(rootTreeModel);
-
+        List<EasyUITreeModel> subTreeModeList = new ArrayList<EasyUITreeModel>();
         List<Resource> resources = resourceService.getAll();
         for (Resource resource : resources) {
             EasyUITreeModel treeModel = new EasyUITreeModel();
             treeModel.setId(resource.getId().toString());
             treeModel.setText(resource.getName());
 
-            rootTreeModel.getChildren().add(treeModel);
+            subTreeModeList.add(treeModel);
+        }
+
+        if (withAllNode) {
+            treeModelList = new ArrayList<EasyUITreeModel>();
+
+            EasyUITreeModel rootTreeModel = new EasyUITreeModel();
+            rootTreeModel.setId("");
+            rootTreeModel.setText("全选");
+            rootTreeModel.getChildren().addAll(subTreeModeList);
+            treeModelList.add(rootTreeModel);
+        } else {
+            treeModelList = subTreeModeList;
         }
 
         return treeModelList;

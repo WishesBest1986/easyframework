@@ -121,21 +121,29 @@ public class AuthorityController {
 
     @ResponseBody
     @RequestMapping(value = "allTree")
-    public List<EasyUITreeModel> allTree() {
+    public List<EasyUITreeModel> allTree(boolean withAllNode) {
         List<EasyUITreeModel> treeModelList = new ArrayList<EasyUITreeModel>();
 
-        EasyUITreeModel rootTreeModel = new EasyUITreeModel();
-        rootTreeModel.setId("");
-        rootTreeModel.setText("全选");
-        treeModelList.add(rootTreeModel);
-
+        List<EasyUITreeModel> subTreeModeList = new ArrayList<EasyUITreeModel>();
         List<Authority> authorities = authorityService.getAll();
         for (Authority authority : authorities) {
             EasyUITreeModel treeModel = new EasyUITreeModel();
             treeModel.setId(authority.getId().toString());
             treeModel.setText(authority.getName());
 
-            rootTreeModel.getChildren().add(treeModel);
+            subTreeModeList.add(treeModel);
+        }
+
+        if (withAllNode) {
+            treeModelList = new ArrayList<EasyUITreeModel>();
+
+            EasyUITreeModel rootTreeModel = new EasyUITreeModel();
+            rootTreeModel.setId("");
+            rootTreeModel.setText("全选");
+            rootTreeModel.getChildren().addAll(subTreeModeList);
+            treeModelList.add(rootTreeModel);
+        } else {
+            treeModelList = subTreeModeList;
         }
 
         return treeModelList;

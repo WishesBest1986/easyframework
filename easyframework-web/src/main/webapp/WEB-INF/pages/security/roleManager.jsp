@@ -133,6 +133,7 @@
     function initAuthorityComboTree() {
       $('#authorityIds').combotree({
         url: '${ctx}/security/authority/allTree',
+        queryParams: {withAllNode: true},
         lines: true,
         multiple: true,
         cascadeCheck: true,

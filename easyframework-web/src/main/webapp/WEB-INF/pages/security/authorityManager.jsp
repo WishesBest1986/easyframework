@@ -133,6 +133,7 @@
     function initResourceComboTree() {
       $('#resourceIds').combotree({
         url: '${ctx}/security/resource/allTree',
+        queryParams: {withAllNode: true},
         lines: true,
         multiple: true,
         cascadeCheck: true,
