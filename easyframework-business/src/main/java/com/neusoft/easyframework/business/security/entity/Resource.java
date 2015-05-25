@@ -16,9 +16,6 @@ public class Resource extends SecurityEntity {
 
     private String source;
 
-//    @JsonBackReference
-//    private Menu menu;
-
     @JsonBackReference
     private List<Authority> authorities = new ArrayList<Authority>();
 
@@ -47,15 +44,6 @@ public class Resource extends SecurityEntity {
     public void setSource(String source) {
         this.source = source;
     }
-
-//    @OneToMany(mappedBy = "resource")
-//    public Menu getMenu() {
-//        return menu;
-//    }
-//
-//    public void setMenu(Menu menu) {
-//        this.menu = menu;
-//    }
 
     @ManyToMany(mappedBy = "resources")
     public List<Authority> getAuthorities() {
