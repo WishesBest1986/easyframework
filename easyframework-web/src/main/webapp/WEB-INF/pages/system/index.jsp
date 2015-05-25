@@ -71,18 +71,6 @@
           }
         ]
       });
-
-//      $('.cs-navi-tab').click(function() {
-//        var self = $(this);
-//        var href = self.attr('src');
-//        var title = self.text();
-//
-//        var params = {
-//          url: href,
-//          title: title
-//        };
-//        addTab(tabsObj, params);
-//      });
     }
 
     function initEditPwdForm() {
@@ -137,13 +125,15 @@
       var zSetting = {
         callback: {
           onClick: function(event, treeId, treeNode, clickFlag) {
-            var href = treeNode.href ? ('${ctx}/' + treeNode.href) : '';
-            var title = treeNode.name;
-            var params = {
-              url: href,
-              title: title
-            };
-            addTab($('#tabs'), params);
+            if (treeNode.href) {
+              var href = treeNode.href ? ('${ctx}/' + treeNode.href) : '';
+              var title = treeNode.name;
+              var params = {
+                url: href,
+                title: title
+              };
+              addTab($('#tabs'), params);
+            }
           }
         }
       };
@@ -200,14 +190,6 @@
 <!-- 右侧菜单 -->
 <div data-options="region:'west', iconCls:'icon-reload', split:true" title="功能菜单" style="width: 15%;padding: 1px;overflow: auto;height: auto;">
   <div id="menuAccordion" class="easyui-accordion" data-options="fit:true, border:false, animate:false">
-    <%--<div title="系统管理" style="padding: 10px;overflow: auto;">--%>
-      <%--<p align="left"><a href="javascript:void(0);" src="${ctx}/security/user" class="cs-navi-tab">用户管理</a></p>--%>
-      <%--<p align="left"><a href="javascript:void(0);" src="${ctx}/security/org" class="cs-navi-tab">部门管理</a></p>--%>
-      <%--<p align="left"><a href="javascript:void(0);" src="${ctx}/security/role" class="cs-navi-tab">角色管理</a></p>--%>
-      <%--<p align="left"><a href="javascript:void(0);" src="${ctx}/security/authority" class="cs-navi-tab">权限管理</a></p>--%>
-      <%--<p align="left"><a href="javascript:void(0);" src="${ctx}/security/resource" class="cs-navi-tab">资源管理</a></p>--%>
-      <%--<p align="left"><a href="javascript:void(0);" src="${ctx}/security/menu" class="cs-navi-tab">菜单管理</a></p>--%>
-    <%--</div>--%>
   </div>
 </div>
 

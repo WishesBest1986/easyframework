@@ -114,7 +114,7 @@ public class MenuController {
             model.setId(menu.getId().toString());
             model.setText(menu.getName());
             if (menu.getParentMenu() == null) {
-                recursionCreateTreeModel(model, menu.getSubMenus());
+                recursionCreateEasyUITreeModel(model, menu.getSubMenus());
                 treeModelList.add(model);
             }
         }
@@ -122,14 +122,14 @@ public class MenuController {
         return treeModelList;
     }
 
-    private void recursionCreateTreeModel(EasyUITreeModel treeModel, List<Menu> subMenus) {
+    private void recursionCreateEasyUITreeModel(EasyUITreeModel treeModel, List<Menu> subMenus) {
         for (Menu subMenu : subMenus) {
             EasyUITreeModel subModel = new EasyUITreeModel();
             subModel.setId(subMenu.getId().toString());
             subModel.setPid(treeModel.getId().toString());
             subModel.setText(subMenu.getName());
             if (subMenu.getSubMenus() != null && subMenu.getSubMenus().size() > 0) {
-                recursionCreateTreeModel(subModel, subMenu.getSubMenus());
+                recursionCreateEasyUITreeModel(subModel, subMenu.getSubMenus());
             }
             treeModel.getChildren().add(subModel);
         }
@@ -148,24 +148,30 @@ public class MenuController {
                 accordionModel.setId(menu.getId().toString());
                 accordionModel.setTitle(menu.getName());
 
-                List<ZTreeModel> treeModels = new ArrayList<ZTreeModel>();
-                List<Menu> subMenus = menu.getSubMenus();
-                for (Menu subMenu : subMenus) {
-                    if (menus.contains(subMenu)) {
-                        ZTreeModel treeModel = new ZTreeModel();
-                        treeModel.setId(subMenu.getId());
-                        treeModel.setName(subMenu.getName());
-                        treeModel.setHref(subMenu.getResource() != null ? (StringUtils.isNotBlank(subMenu.getResource().getSource()) ? subMenu.getResource().getSource() : "") : "");
-
-                        treeModels.add(treeModel);
-                    }
-                }
-                accordionModel.setTreeModels(treeModels);
+                ZTreeModel model = new ZTreeModel();
+                recursionCreateZTreeModel(model, menu.getSubMenus(), menus);
+                accordionModel.setTreeModels(model.getChildren());
 
                 accordionModels.add(accordionModel);
             }
         }
 
         return accordionModels;
+    }
+
+    private void recursionCreateZTreeModel(ZTreeModel treeModel, List<Menu> subMenus, List<Menu> allowedMenus) {
+        for (Menu subMenu : subMenus) {
+            if (allowedMenus.contains(subMenu)) {
+                ZTreeModel subModel = new ZTreeModel();
+                subModel.setId(subMenu.getId());
+                subModel.setName(subMenu.getName());
+                subModel.setHref(subMenu.getResource() != null ? (StringUtils.isNotBlank(subMenu.getResource().getSource()) ? subMenu.getResource().getSource() : "") : "");
+
+                if (subMenu.getSubMenus() != null && subMenu.getSubMenus().size() > 0) {
+                    recursionCreateZTreeModel(subModel, subMenu.getSubMenus(), allowedMenus);
+                }
+                treeModel.getChildren().add(subModel);
+            }
+        }
     }
 }
