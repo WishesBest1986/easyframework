@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/util
+       http://www.springframework.org/schema/util/spring-util.xsd">
+
+       <bean id="permissionsAuthorizationFilter" class="com.neusoft.easyframework.business.security.shiro.filter.CustomPermissionsAuthorizationFilter">
+
+       </bean>
+
+       <bean id="sslFilter" class="org.apache.shiro.web.filter.authz.SslFilter">
+              <property name="port" value="8443" />
+       </bean>
+
+       <bean id="casFilter" class="org.apache.shiro.cas.CasFilter">
+              <property name="failureUrl" value="/common/casFailure.jsp" />
+       </bean>
+
+       <bean id="logoutFilter" class="org.apache.shiro.web.filter.authc.LogoutFilter">
+              <property name="redirectUrl" value="https://localhost:8453/cas/logout?service=https://localhost:8443/easyframework" />
+       </bean>
+
+       <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+              <property name="securityManager" ref="securityManager" />
+              <property name="loginUrl" value="https://localhost:8453/cas/login?service=https://localhost:8443/easyframework/shirocas" />
+              <property name="unauthorizedUrl" value="/common/403.jsp" />
+              <property name="filters">
+                     <util:map>
+                            <entry key="perms" value-ref="permissionsAuthorizationFilter" />
+                            <entry key="ssl" value-ref="sslFilter" />
+                            <entry key="cas" value-ref="casFilter" />
+                            <entry key="logout" value-ref="logoutFilter" />
+                     </util:map>
+              </property>
+       </bean>
+
+
+       <bean id="definitionMetaSourceService" class="com.neusoft.easyframework.business.security.shiro.ShiroDefinitionSectionMetaSourceService">
+              <property name="filterChainDefinitions">
+                     <value>
+                            /shirocas = cas
+                            /login = ssl, anon
+                            /doLogin = anon
+                            /doLogout = logout
+                            /statics/** = anon
+                            /common/** = anon
+                            /index = user
+                     </value>
+              </property>
+       </bean>
+
+       <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+              <property name="realm" ref="casRealm" />
+       </bean>
+
+       <!--<bean id="dbRealm" class="com.neusoft.easyframework.business.security.shiro.ShiroAuthorizingRealm">-->
+              <!--<property name="userService" ref="userService" />-->
+       <!--</bean>-->
+
+       <bean id="casRealm" class="com.neusoft.easyframework.business.security.shiro.ShiroCasRealm">
+              <property name="userService" ref="userService" />
+
+              <property name="casServerUrlPrefix" value="https://localhost:8453/cas" />
+              <property name="casService" value="https://localhost:8443/easyframework/shirocas" />
+       </bean>
+
+       <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+
+</beans>
