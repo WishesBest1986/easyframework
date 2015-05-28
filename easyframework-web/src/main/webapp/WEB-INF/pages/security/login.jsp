@@ -25,6 +25,10 @@
           }
         }
       });
+
+      $(".jcaptcha-btn").click(function() {
+        $(".jcaptcha-img").attr("src", "${ctx}/jcaptcha.jpg?" + new Date().getTime());
+      });
     });
 
     function submitForm() {
@@ -59,6 +63,15 @@
               <td>密码:</td>
               <td>
                 <input class="easyui-validatebox" type="password" name="password" data-options="required:true" />
+              </td>
+            </tr>
+            <tr>
+              <td>验证码:</td>
+              <td>
+                <input class="easyui-validatebox" type="text" name="jCaptchaCode" data-options="required:true" />
+                <br />
+                <img class="jcaptcha-btn jcaptcha-img" src="${ctx}/jcaptcha.jpg" title="点击更换验证码" />
+                <a class="jcaptcha-btn" href="javascript:void(0)">换一张</a>
               </td>
             </tr>
             <tr>

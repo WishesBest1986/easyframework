@@ -22,6 +22,7 @@
     <shiro.version>1.2.2</shiro.version>
     <slf4j.version>1.7.2</slf4j.version>
     <jackson.version>2.1.0</jackson.version>
+    <jcaptcha.version>2.0-alpha-1</jcaptcha.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -95,4 +96,19 @@
     </dependency>
 
   </dependencies>
+
+  <repositories>
+    <repository>
+      <id>oschina Releases</id>
+      <name>oschina Releases</name>
+      <url>http://maven.oschina.net/content/groups/public</url>
+    </repository>
+
+    <repository>
+      <id>central</id>
+      <name>Maven Central</name>
+      <layout>default</layout>
+      <url>http://repo1.maven.org/maven2</url>
+    </repository>
+  </repositories>
 </project>

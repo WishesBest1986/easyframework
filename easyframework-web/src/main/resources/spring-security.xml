@@ -14,6 +14,10 @@
 
        </bean>
 
+       <bean id="jCaptchaValidateFilter" class="com.neusoft.easyframework.web.jcaptcha.JCaptchaValidateFilter">
+
+       </bean>
+
        <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
               <property name="securityManager" ref="securityManager" />
               <property name="loginUrl" value="/login" />
@@ -21,6 +25,7 @@
               <property name="filters">
                      <util:map>
                             <entry key="perms" value-ref="permissionsAuthorizationFilter" />
+                            <entry key="jCaptchaValidate" value-ref="jCaptchaValidateFilter" />
                      </util:map>
               </property>
        </bean>
@@ -29,7 +34,8 @@
               <property name="filterChainDefinitions">
                      <value>
                             /login = anon
-                            /doLogin = anon
+                            /jcaptcha* = anon
+                            /doLogin = jCaptchaValidate,anon
                             /doLogout = logout
                             /statics/** = anon
                             /common/** = anon

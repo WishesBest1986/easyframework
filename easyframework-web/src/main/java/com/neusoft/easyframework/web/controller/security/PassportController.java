@@ -35,29 +35,33 @@ public class PassportController {
     public JsonModel doLogin(User user, HttpServletRequest request) {
         JsonModel jsonModel = new JsonModel();
 
-        Subject subject = SecurityUtils.getSubject();
-        UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername(), user.getPassword());
-        String remember = WebUtils.getCleanParam(request, "rememberMe");
+        if (request.getAttribute("shiroLoginFailure") != null) {
+            jsonModel.setMsg("请填写正确的验证码");
+        } else {
+            Subject subject = SecurityUtils.getSubject();
+            UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername(), user.getPassword());
+            String remember = WebUtils.getCleanParam(request, "rememberMe");
 
-        try {
-            if (StringUtils.isNotBlank(remember) && remember.equalsIgnoreCase("on")) {
-                token.setRememberMe(true);
+            try {
+                if (StringUtils.isNotBlank(remember) && remember.equalsIgnoreCase("on")) {
+                    token.setRememberMe(true);
+                }
+                subject.login(token);
+
+                jsonModel.setSuccess(true);
+            } catch (UnknownAccountException ue) {
+                token.clear();
+                jsonModel.setMsg("用户名不存在");
+            } catch (IncorrectCredentialsException ie) {
+                token.clear();
+                jsonModel.setMsg("用户名/密码错误");
+            } catch (DisabledAccountException de) {
+                token.clear();
+                jsonModel.setMsg("用户被禁止使用");
+            } catch (Exception e) {
+                token.clear();
+                jsonModel.setMsg("其他错误");
             }
-            subject.login(token);
-
-            jsonModel.setSuccess(true);
-        } catch (UnknownAccountException ue) {
-            token.clear();
-            jsonModel.setMsg("用户名不存在");
-        } catch (IncorrectCredentialsException ie) {
-            token.clear();
-            jsonModel.setMsg("用户名/密码错误");
-        } catch (DisabledAccountException de) {
-            token.clear();
-            jsonModel.setMsg("用户被禁止使用");
-        } catch (Exception e) {
-            token.clear();
-            jsonModel.setMsg("其他错误");
         }
 
         return jsonModel;
